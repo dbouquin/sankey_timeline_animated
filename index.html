@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline Sankey Diagram</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .description {
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+    #visualization {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: auto;
+      margin-bottom: 30px; /* Add margin at the bottom */
+    }
+    .node {
+      cursor: pointer;
+    }
+    .link {
+      mix-blend-mode: multiply;
+    }
+    .time-axis path, .time-axis line {
+      stroke: #ccc;
+    }
+    .time-axis text {
+      font-size: 11px; /* Slightly larger font size for better readability */
+      fill: #333;      /* Darker text color for better contrast */
+    }
+    .phase-label {
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      padding: 20px;
+      background-color: #ffeeee;
+      border-radius: 5px;
+    }
+    /* Add css for better label visibility */
+    .time-axis text {
+      text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Timeline Sankey Diagram</h1>
+  
+  <div class="description">
+    <p>This visualization shows projects as nodes positioned on a timeline. Hover over a node to see its connections animate. Projects are positioned horizontally based on their start and end dates, and vertically by their phase.</p>
+  </div>
+  
+  <div id="visualization"></div>
+  
+  <script type="module" src="timeline-sankey.js"></script>
+</body>
+</html>

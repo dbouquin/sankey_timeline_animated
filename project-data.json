@@ -1,0 +1,123 @@
+{
+  "projects": [
+    {
+      "id": "project-a",
+      "name": "Project A",
+      "startDate": "2023-01-01",
+      "endDate": "2023-03-15",
+      "duration": 73,
+      "category": "research",
+      "phase": 1
+    },
+    {
+      "id": "project-b",
+      "name": "Project B",
+      "startDate": "2023-03-20",
+      "endDate": "2023-06-30",
+      "duration": 102,
+      "category": "development",
+      "phase": 2
+    },
+    {
+      "id": "project-c",
+      "name": "Project C",
+      "startDate": "2023-04-15",
+      "endDate": "2023-08-15",
+      "duration": 122,
+      "category": "implementation",
+      "phase": 3
+    },
+    {
+      "id": "project-d",
+      "name": "Project D",
+      "startDate": "2023-02-01",
+      "endDate": "2023-05-15",
+      "duration": 103,
+      "category": "research",
+      "phase": 1
+    },
+    {
+      "id": "project-e",
+      "name": "Project E",
+      "startDate": "2023-06-01",
+      "endDate": "2023-09-30",
+      "duration": 121,
+      "category": "implementation",
+      "phase": 3
+    },
+    {
+      "id": "project-f",
+      "name": "Project F",
+      "startDate": "2023-07-15",
+      "endDate": "2023-10-20",
+      "duration": 97,
+      "category": "testing",
+      "phase": 4
+    },
+    {
+      "id": "project-g",
+      "name": "Project G",
+      "startDate": "2023-05-01",
+      "endDate": "2023-07-30",
+      "duration": 90,
+      "category": "development",
+      "phase": 2
+    },
+    {
+      "id": "project-h",
+      "name": "Project H",
+      "startDate": "2023-09-01",
+      "endDate": "2023-12-15",
+      "duration": 105,
+      "category": "deployment",
+      "phase": 5
+    }
+  ],
+  "connections": [
+    {
+      "source": "project-a",
+      "target": "project-b",
+      "value": 40
+    },
+    {
+      "source": "project-b",
+      "target": "project-c",
+      "value": 65
+    },
+    {
+      "source": "project-d",
+      "target": "project-e",
+      "value": 55
+    },
+    {
+      "source": "project-b",
+      "target": "project-e",
+      "value": 30
+    },
+    {
+      "source": "project-c",
+      "target": "project-f",
+      "value": 45
+    },
+    {
+      "source": "project-e",
+      "target": "project-h",
+      "value": 70
+    },
+    {
+      "source": "project-f",
+      "target": "project-h",
+      "value": 35
+    },
+    {
+      "source": "project-a",
+      "target": "project-g",
+      "value": 25
+    },
+    {
+      "source": "project-g",
+      "target": "project-h",
+      "value": 50
+    }
+  ]
+}
