@@ -446,12 +446,14 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           connectionsElement.appendChild(incomingHeader);
           
           const incomingList = document.createElement('ul');
-          incomingList.style.marginTop = '5px';
-          incomingList.style.paddingLeft = '20px';
+          incomingList.style.marginTop = '3px';
+          incomingList.style.paddingLeft = '15px';
+          incomingList.style.marginBottom = '3px';
           
           node.targetLinks.forEach(link => {
             const item = document.createElement('li');
-            item.textContent = `${link.source.name} (Value: ${link.value})`;
+            item.textContent = `${link.source.name} (${link.value})`;
+            item.style.marginBottom = '2px';
             incomingList.appendChild(item);
           });
           
@@ -463,16 +465,18 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           const outgoingHeader = document.createElement('div');
           outgoingHeader.textContent = 'Outgoing:';
           outgoingHeader.style.fontWeight = 'bold';
-          outgoingHeader.style.marginTop = '10px';
+          outgoingHeader.style.marginTop = '5px';
           connectionsElement.appendChild(outgoingHeader);
           
           const outgoingList = document.createElement('ul');
-          outgoingList.style.marginTop = '5px';
-          outgoingList.style.paddingLeft = '20px';
+          outgoingList.style.marginTop = '3px';
+          outgoingList.style.paddingLeft = '15px';
+          outgoingList.style.marginBottom = '0';
           
           node.sourceLinks.forEach(link => {
             const item = document.createElement('li');
-            item.textContent = `${link.target.name} (Value: ${link.value})`;
+            item.textContent = `${link.target.name} (${link.value})`;
+            item.style.marginBottom = '2px';
             outgoingList.appendChild(item);
           });
           
@@ -772,7 +776,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const height = 700; // Increased height
     const margin = {
       top: 30,
-      right: 30,
+      right: 350, // Increased right margin to make room for the info panel
       bottom: 100, // Increased bottom margin to make room for axis labels
       left: 100    // Increased left margin to make room for project labels
     };
