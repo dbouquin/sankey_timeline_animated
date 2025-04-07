@@ -262,7 +262,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .attr("dy", "0.35em")
     .attr("fill", "#333") // Dark text for better visibility
     .attr("text-anchor", "end") // Right-align text
-    .attr("font-size", 12)
+    .attr("font-size", 11)
     .attr("font-family", "Arial, sans-serif")
     .text(d => d.name);
     
@@ -498,7 +498,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
       document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
-      document.getElementById('node-phase').textContent = `${node.phases || '1'}`;
+      document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
       
       // Show connections information
       const connectionsElement = document.getElementById('node-connections');
@@ -724,7 +724,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
       document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
-      document.getElementById('node-phase').textContent = `Phase ${node.phase || '1'}`;
+      document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
       
       // Show connections information
       const connectionsElement = document.getElementById('node-connections');
