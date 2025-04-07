@@ -1,127 +1,202 @@
 {
   "projects": [
     {
-      "id": "project-a",
-      "name": "Project A",
-      "startDate": "2023-01-01",
-      "endDate": "2023-03-15",
-      "duration": 73,
-      "category": "research",
+      "id": "project-1",
+      "name": "ACF ML Shared Environment",
+      "startDate": "2024-02-26",
+      "endDate": "2024-07-08",
+      "duration": "19 weeks",
+      "category": "M",
       "phases": 1
     },
     {
-      "id": "project-b",
-      "name": "Project B",
-      "startDate": "2023-03-20",
-      "endDate": "2023-06-30",
-      "duration": 102,
-      "category": "development",
+      "id": "project-2",
+      "name": "ANA Disbursement Model",
+      "startDate": "2024-03-19",
+      "endDate": "2024-03-22",
+      "duration": "< 1 week",
+      "category": "XS",
+      "phases": 1
+    },
+    {
+      "id": "project-3",
+      "name": "Analyze USG AI Inventory",
+      "startDate": "2024-05-20",
+      "endDate": "2024-08-14",
+      "duration": "12.3 weeks",
+      "category": "S",
+      "phases": 1
+    },
+    {
+      "id": "project-4",
+      "name": "ECD Tribal Home Visit Performance",
+      "startDate": "2024-04-03",
+      "endDate": "2024-06-05",
+      "duration": "9 weeks",
+      "category": "M",
+      "phases": 1
+    },
+    {
+      "id": "project-5",
+      "name": "NLP On GFE Testing",
+      "startDate": "2024-05-20",
+      "endDate": "2024-08-14",
+      "duration": "12.3 weeks",
+      "category": "M",
+      "phases": 1
+    },
+    {
+      "id": "project-6",
+      "name": "OA Workforce Engagement Explanation",
+      "startDate": "2024-03-11",
+      "endDate": "2024-07-10",
+      "duration": "17.3 weeks",
+      "category": "L",
       "phases": 2
     },
     {
-      "id": "project-c",
-      "name": "Project C",
-      "startDate": "2023-04-15",
-      "endDate": "2023-08-15",
-      "duration": 122,
-      "category": "implementation",
+      "id": "project-7",
+      "name": "OHS NPRM Comment Analysis",
+      "startDate": "2023-11-13",
+      "endDate": "2024-02-09",
+      "duration": "12.6 weeks",
+      "category": "XL",
       "phases": 1
     },
     {
-      "id": "project-d",
-      "name": "Project D",
-      "startDate": "2023-02-01",
-      "endDate": "2023-05-15",
-      "duration": 103,
-      "category": "research",
+      "id": "project-8",
+      "name": "OCC Integrated Dashboards",
+      "startDate": "2024-03-29",
+      "endDate": "2024-08-06",
+      "duration": "18.6 weeks",
+      "category": "S",
       "phases": 1
     },
     {
-      "id": "project-e",
-      "name": "Project E",
-      "startDate": "2023-06-01",
-      "endDate": "2023-09-30",
-      "duration": 121,
-      "category": "implementation",
-      "phases": 3
-    },
-    {
-      "id": "project-f",
-      "name": "Project F",
-      "startDate": "2023-07-15",
-      "endDate": "2023-10-20",
-      "duration": 97,
-      "category": "testing",
+      "id": "project-9",
+      "name": "OEA Outreach Lists",
+      "startDate": "2024-07-08",
+      "endDate": "2024-08-28",
+      "duration": "7.3 weeks",
+      "category": "S",
       "phases": 1
     },
     {
-      "id": "project-g",
-      "name": "Project G",
-      "startDate": "2023-05-01",
-      "endDate": "2023-07-30",
-      "duration": 90,
-      "category": "development",
+      "id": "project-10",
+      "name": "OFA Policy Knowledge Base Data Migration",
+      "startDate": "2024-06-14",
+      "endDate": "2024-10-18",
+      "duration": "18 weeks",
+      "category": "M",
       "phases": 1
     },
     {
-      "id": "project-h",
-      "name": "Project H",
-      "startDate": "2023-09-01",
-      "endDate": "2023-12-15",
-      "duration": 105,
-      "category": "deployment",
+      "id": "project-11",
+      "name": "OFA TANF Longitudinal Dataset",
+      "startDate": "2024-10-21",
+      "endDate": "2025-02-26",
+      "duration": "18 weeks",
+      "category": "M",
+      "phases": 1
+    },
+    {
+      "id": "project-12",
+      "name": "OGM Grants Spending Trends",
+      "startDate": "2024-03-04",
+      "endDate": "2025-01-29",
+      "duration": "47.3 weeks",
+      "category": "L",
       "phases": 2
     },
     {
-      "id": "project-i",
-      "name": "Project I",
-      "startDate": "2023-10-16",
-      "endDate": "2023-12-23",
-      "duration": 45,
-      "category": "deployment",
+      "id": "project-13",
+      "name": "OHS PIR Pipeline",
+      "startDate": "2023-10-17",
+      "endDate": "2024-05-24",
+      "duration": "31.4 weeks",
+      "category": "L",
+      "phases": 1
+    },
+    {
+      "id": "project-13",
+      "name": "OPRE Analytics Standards",
+      "startDate": "2023-12-07",
+      "endDate": "2024-03-29",
+      "duration": "16.1 weeks",
+      "category": "XS",
+      "phases": 1
+    },
+    {
+      "id": "project-14",
+      "name": "Qualtrics Learning Resources",
+      "startDate": "2024-03-15",
+      "endDate": "2024-10-07",
+      "duration": "29.4 weeks",
+      "category": "XS",
+      "phases": 1
+    },
+    {
+      "id": "project-15",
+      "name": "Surge Team Code Standards",
+      "startDate": "2024-02-12",
+      "endDate": "2024-02-29",
+      "duration": "2.4 weeks",
+      "category": "S",
+      "phases": 1
+    },
+    {
+      "id": "project-16",
+      "name": "Tableau Learning Resources",
+      "startDate": "2024-02-12",
+      "endDate": "2024-10-07",
+      "duration": "34 weeks",
+      "category": "M",
+      "phases": 1
+    },
+    {
+      "id": "project-17",
+      "name": "OHSEPR TANF Service Delivery Data Scrapes",
+      "startDate": "2024-08-26",
+      "endDate": "2024-10-25",
+      "duration": "8.6 weeks",
+      "category": "M",
+      "phases": 1
+    },
+    {
+      "id": "project-18",
+      "name": "Story: ACF Investments Across the Country",
+      "startDate": "2024-05-20",
+      "endDate": "2024-08-22",
+      "duration": "13.4 weeks",
+      "category": "M",
       "phases": 1
     }
   ],
   "connections": [
     {
-      "source": "project-a",
-      "target": "project-b",
+      "source": "project-1",
+      "target": "project-2",
       "value": 40
     },
     {
-      "source": "project-b",
-      "target": "project-c",
+      "source": "project-2",
+      "target": "project-3",
       "value": 65
     },
     {
-      "source": "project-d",
-      "target": "project-e",
+      "source": "project-4",
+      "target": "project-5",
       "value": 55
     },
     {
-      "source": "project-b",
-      "target": "project-e",
+      "source": "project-2",
+      "target": "project-5",
       "value": 30
     },
     {
-      "source": "project-e",
-      "target": "project-h",
+      "source": "project-5",
+      "target": "project-7",
       "value": 70
-    },
-    {
-      "source": "project-f",
-      "target": "project-h",
-      "value": 35
-    },
-    {
-      "source": "project-a",
-      "target": "project-d",
-      "value": 25
-    },
-    {
-      "source": "project-g",
-      "target": "project-h",
-      "value": 50
     }
   ]
 }

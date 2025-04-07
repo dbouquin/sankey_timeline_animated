@@ -10,11 +10,11 @@ async function loadProjectData() {
 }
 
 // Position nodes based on time - all nodes evenly distributed vertically
-function createLayout(timeScale, height, margin) {
+function createLayout(timeScale, height, margin, totalNodes) {
   return function(graph) {
     // Calculate node positions based on time scale
-    const nodeHeight = 30;
-    const nodePadding = 20;
+    const nodeHeight = Math.min(30, Math.max(15, 600 / totalNodes)); // Adjust node height based on total count
+    const nodePadding = Math.min(20, Math.max(5, 300 / totalNodes)); // Adjust padding based on total count
     const maxHeight = height - margin.top - margin.bottom - 50; 
     
     // Position nodes without grouping by phase
@@ -227,19 +227,32 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
   nodes.append("title").text(d => 
     `${d.name}\nDuration: ${d.duration} days\n${d3.timeFormat("%b %d, %Y")(d.startDate)} - ${d3.timeFormat("%b %d, %Y")(d.endDate)}`);
   
-  // Add text labels
-  view.selectAll("text.node")
+  // Add text labels to the left of nodes
+  view.selectAll("text.node-label")
     .data(graph.nodes)
     .join("text")
-    .classed("node", true)
-    .attr("x", d => (d.x0 + d.x1) / 2) // Center in node
+    .classed("node-label", true)
+    .attr("x", d => d.x0 - 5) // Position just to the left of the node
     .attr("y", d => (d.y0 + d.y1) / 2)
     .attr("dy", "0.35em")
-    .attr("fill", d => d3.hsl(d.color).l > 0.6 ? "black" : "white") // Contrast text color
-    .attr("text-anchor", "middle")
+    .attr("fill", "#333") // Dark text for better visibility
+    .attr("text-anchor", "end") // Right-align text
     .attr("font-size", 10)
     .attr("font-family", "Arial, sans-serif")
     .text(d => d.name);
+    
+  // Optional: Add light connecting line between label and node
+  view.selectAll("line.node-label-connector")
+    .data(graph.nodes)
+    .join("line")
+    .classed("node-label-connector", true)
+    .attr("x1", d => d.x0 - 3)
+    .attr("y1", d => (d.y0 + d.y1) / 2)
+    .attr("x2", d => d.x0)
+    .attr("y2", d => (d.y0 + d.y1) / 2)
+    .attr("stroke", "#ccc")
+    .attr("stroke-width", 0.5)
+    .attr("stroke-dasharray", "2,2");
   
   // Only create links if there are any connections
   let gradientLinks = null; // Make sure gradientLinks is defined in this scope
@@ -310,11 +323,28 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       }
       
       // Highlight the node being hovered
-      d3.select(this)
+      d3.select(`#node-${node.id}`)
         .transition()
         .duration(200)
         .attr("opacity", 1)
         .attr("stroke-width", 2);
+      
+      // Also highlight the label
+      d3.selectAll("text.node-label")
+        .filter(d => d.id === node.id)
+        .transition()
+        .duration(200)
+        .attr("font-weight", "bold")
+        .attr("fill", "#000");
+        
+      // Highlight the connector line
+      d3.selectAll("line.node-label-connector")
+        .filter(d => d.id === node.id)
+        .transition()
+        .duration(200)
+        .attr("stroke", "#999")
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "none");
       
       // Animate the node gradient first
       defs.select(`#node-gradient-${node.id}`)
@@ -370,6 +400,21 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         .duration(200)
         .attr("opacity", 0.9)
         .attr("stroke-width", 1);
+      
+      // Reset labels
+      d3.selectAll("text.node-label")
+        .transition()
+        .duration(200)
+        .attr("font-weight", "normal")
+        .attr("fill", "#333");
+        
+      // Reset connector lines
+      d3.selectAll("line.node-label-connector")
+        .transition()
+        .duration(200)
+        .attr("stroke", "#ccc")
+        .attr("stroke-width", 0.5)
+        .attr("stroke-dasharray", "2,2");
       
       // Reset all node gradients
       defs.selectAll("linearGradient.node-gradient")
@@ -531,7 +576,9 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     });
 
     // Add mouse interaction
-    nodes.on("mouseover", branchAnimate)
+    nodes.on("mouseover", function(event, node) {
+      branchAnimate.call(this, event, node);
+    })
       .on("mouseout", branchClear)
       .on("click", handleNodeClick);
   } else {
@@ -773,7 +820,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     // Constants
     const width = window.innerWidth - 20;
-    const height = 700; // Increased height
+    // Adjust height based on viewport size 
+    const height = Math.max(700, window.innerHeight - 200); // Dynamic height calculation
     const margin = {
       top: 30,
       right: 350, // Increased right margin to make room for the info panel
@@ -791,17 +839,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Process data
     const graph = processData(projectData, d3);
     
+    // Calculate dynamic sizing based on dataset size
+    const totalNodes = graph.nodes.length;
+    const dynamicHeight = Math.max(height, 150 + (totalNodes * 50)); // Ensure minimum height plus space for nodes
+    
     // Create time scale
     const timeScale = createTimeScale(d3, graph, width, margin);
     
     // Create layout
-    const layout = createLayout(timeScale, height, margin);
+    const layout = createLayout(timeScale, dynamicHeight, margin, totalNodes);
     
     // Apply layout to graph
     const layoutedGraph = layout(graph);
     
-    // Create visualization
-    const svg = createVisualization(d3, width, height, layoutedGraph, margin, timeScale, duration);
+    // Create visualization with dynamic height
+    const svg = createVisualization(d3, width, dynamicHeight, layoutedGraph, margin, timeScale, duration);
     
     // Add to the page
     document.getElementById('visualization').appendChild(svg);
