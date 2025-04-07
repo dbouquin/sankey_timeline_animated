@@ -141,6 +141,7 @@ function createTimeScale(d3, graph, width, margin) {
 // Create the SVG visualization
 function createVisualization(d3, width, height, graph, margin, timeScale, duration) {
   const arrow = "→"; // Unicode arrow for link tooltips
+  let selectedNode = null; // Track the currently selected node
   
   const svg = d3.create("svg")
     .attr("width", width)
@@ -240,7 +241,9 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .text(d => d.name);
   
   // Only create links if there are any connections
-  let gradientLinks;
+  let gradientLinks = null; // Make sure gradientLinks is defined in this scope
+  let setDash; // Declare setDash in the current scope so it's accessible
+  
   if (graph.links.length > 0) {
     // Create a custom link curve that adjusts based on the distance between nodes
     const createLinkPath = (d) => {
@@ -277,14 +280,14 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       `${d.source.name} ${arrow} ${d.target.name}\nValue: ${d.value}`);
       
     // Define the dash behavior for colored gradients
-    function setDash(link) {
+    setDash = function(link) {
       let el = view.select(`#${link.path}`);
       if (!el.empty()) {
         let length = el.node().getTotalLength();
         el.attr("stroke-dasharray", `${length} ${length}`)
           .attr("stroke-dashoffset", length);
       }
-    }
+    };
     
     gradientLinks = view.selectAll("path.gradient-link")
       .data(graph.links)
@@ -300,6 +303,11 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     
     // Animation functions for when a node is hovered
     function branchAnimate(event, node) {
+      // Skip if this is triggered by a mouseout of a selected node
+      if (selectedNode === node && event && event.type === 'mouseout') {
+        return;
+      }
+      
       // Highlight the node being hovered
       d3.select(this)
         .transition()
@@ -307,46 +315,55 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         .attr("opacity", 1)
         .attr("stroke-width", 2);
       
-      // Animate the node gradient
+      // Animate the node gradient first
       defs.select(`#node-gradient-${node.id}`)
         .selectAll("stop")
         .transition()
         .duration(duration)
         .attr("offset", function(d, i) {
           return i === 0 ? "100%" : "100%";  // Both stops move to 100%
-        });
-      
-      // Only animate if the node has outgoing links
-      if (node.sourceLinks && node.sourceLinks.length > 0) {
-        // Find all outgoing links from this node
-        let links = view.selectAll("path.gradient-link")
-          .filter((link) => {
-            return node.sourceLinks.indexOf(link) !== -1;
-          });
-        
-        // Track the nodes that these links connect to
-        let nextNodes = [];
-        links.each((link) => {
-          nextNodes.push(link.target);
-        });
-        
-        // Animate the gradient along the path
-        links.attr("stroke-opacity", 0.8)
-          .transition()
-          .duration(duration)
-          .ease(d3.easeLinear)
-          .attr("stroke-dashoffset", 0)
-          .on("end", () => {
-            // Recursively animate connected nodes
-            nextNodes.forEach((nextNode) => {
-              branchAnimate.call(null, null, nextNode);
+        })
+        // Only animate links AFTER node animation completes
+        .on("end", () => {
+          // Only animate if the node has outgoing links
+          if (node.sourceLinks && node.sourceLinks.length > 0) {
+            // Find all outgoing links from this node
+            let links = view.selectAll("path.gradient-link")
+              .filter((link) => {
+                return node.sourceLinks.indexOf(link) !== -1;
+              });
+            
+            // Track the nodes that these links connect to
+            let nextNodes = [];
+            links.each((link) => {
+              nextNodes.push(link.target);
             });
-          });
-      }
+            
+            // Animate the gradient along the path
+            links.attr("stroke-opacity", 0.8)
+              .transition()
+              .duration(duration)
+              .ease(d3.easeLinear)
+              .attr("stroke-dashoffset", 0)
+              .on("end", () => {
+                // Recursively animate connected nodes (but not if we're deselecting)
+                if (selectedNode !== null || event.type !== 'click') {
+                  nextNodes.forEach((nextNode) => {
+                    branchAnimate.call(null, event, nextNode);
+                  });
+                }
+              });
+          }
+        });
     }
     
     // Reset animation when mouse leaves a node
     function branchClear() {
+      // Don't clear if there's a selected node
+      if (selectedNode !== null) {
+        return;
+      }
+      
       // Reset node appearance and gradients
       nodes.transition()
         .duration(200)
@@ -363,19 +380,51 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         });
       
       // Stop and reset all gradient animations for links
-      if (gradientLinks.size() > 0) {
+      if (gradientLinks && gradientLinks.size() > 0) {
         gradientLinks.transition();
         gradientLinks.attr("stroke-opacity", 0)
-          .each(setDash);
+          .each(setDash); // setDash is defined in the same scope
       }
     }
+    
+    // Handle node click events
+    function handleNodeClick(event, node) {
+      event.stopPropagation(); // Prevent clicks from bubbling to the SVG
+      
+      if (selectedNode === node) {
+        // If clicking the same node again, deselect it
+        selectedNode = null;
+        branchClear();
+      } else {
+        // First, clear any existing animations
+        branchClear();
+        
+        // Set this as the selected node
+        selectedNode = node;
+        
+        // Trigger the animation for this node
+        branchAnimate.call(this, event, node);
+      }
+    }
+    
+    // Clear selection when clicking on empty space
+    svg.on("click", () => {
+      if (selectedNode !== null) {
+        selectedNode = null;
+        branchClear();
+      }
+    });
 
     // Add mouse interaction
     nodes.on("mouseover", branchAnimate)
-      .on("mouseout", branchClear);
+      .on("mouseout", branchClear)
+      .on("click", handleNodeClick);
   } else {
-    // If there are no links, still add hover effect to nodes
+    // If there are no links, still add hover effect to nodes with similar animation
     nodes.on("mouseover", function(event, node) {
+      // Skip if this is already the selected node
+      if (selectedNode === node) return;
+      
       d3.select(this)
         .transition()
         .duration(200)
@@ -392,6 +441,9 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         });
     })
     .on("mouseout", function(event, node) {
+      // Don't reset if this is the selected node
+      if (selectedNode === node) return;
+      
       d3.select(this)
         .transition()
         .duration(200)
@@ -406,6 +458,84 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         .attr("offset", function(d, i) {
           return i === 0 ? "0%" : "100%";  // Reset to original positions
         });
+    })
+    .on("click", function(event, node) {
+      event.stopPropagation();
+      
+      if (selectedNode === node) {
+        // Deselect if clicking the same node
+        selectedNode = null;
+        
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("opacity", 0.9)
+          .attr("stroke-width", 1);
+        
+        defs.select(`#node-gradient-${node.id}`)
+          .selectAll("stop")
+          .transition()
+          .duration(200)
+          .attr("offset", function(d, i) {
+            return i === 0 ? "0%" : "100%";  // Reset to original positions
+          });
+      } else {
+        // First reset any previously selected node
+        if (selectedNode !== null) {
+          d3.select(`#node-${selectedNode.id}`)
+            .transition()
+            .duration(200)
+            .attr("opacity", 0.9)
+            .attr("stroke-width", 1);
+          
+          defs.select(`#node-gradient-${selectedNode.id}`)
+            .selectAll("stop")
+            .transition()
+            .duration(200)
+            .attr("offset", function(d, i) {
+              return i === 0 ? "0%" : "100%";  // Reset to original positions
+            });
+        }
+        
+        // Select this node
+        selectedNode = node;
+        
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("opacity", 1)
+          .attr("stroke-width", 2);
+        
+        defs.select(`#node-gradient-${node.id}`)
+          .selectAll("stop")
+          .transition()
+          .duration(duration)
+          .attr("offset", function(d, i) {
+            return i === 0 ? "100%" : "100%";  // Both stops move to 100%
+          });
+      }
+    });
+    
+    // Clear selection when clicking on empty space
+    svg.on("click", () => {
+      if (selectedNode !== null) {
+        const node = selectedNode;
+        selectedNode = null;
+        
+        d3.select(`#node-${node.id}`)
+          .transition()
+          .duration(200)
+          .attr("opacity", 0.9)
+          .attr("stroke-width", 1);
+        
+        defs.select(`#node-gradient-${node.id}`)
+          .selectAll("stop")
+          .transition()
+          .duration(200)
+          .attr("offset", function(d, i) {
+            return i === 0 ? "0%" : "100%";  // Reset to original positions
+          });
+      }
     });
   }
   
@@ -458,4 +588,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('visualization').appendChild(errorElement);
   }
 });
-
