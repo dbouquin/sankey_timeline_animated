@@ -12,26 +12,52 @@ async function loadProjectData() {
 // Position nodes based on time - all nodes evenly distributed vertically
 function createLayout(timeScale, height, margin, totalNodes) {
   return function(graph) {
+    // Define height factors for different categories
+    const categoryHeightFactors = {
+      "XS": 0.6,  // Smallest height
+      "S": 0.8,   // Small height
+      "M": 1.0,   // Medium height (baseline)
+      "L": 1.2,   // Large height
+      "XL": 1.5   // Extra large height
+    };
+    
     // Calculate node positions based on time scale
-    const nodeHeight = Math.min(30, Math.max(15, 600 / totalNodes)); // Adjust node height based on total count
+    const baseNodeHeight = Math.min(25, Math.max(12, 500 / totalNodes)); // Base height for category "M"
     const nodePadding = Math.min(20, Math.max(5, 300 / totalNodes)); // Adjust padding based on total count
-    const maxHeight = height - margin.top - margin.bottom - 50; 
+    const maxHeight = height - margin.top - margin.bottom - 30; // Reduced extra padding
     
     // Position nodes without grouping by phase
     // Distribute nodes evenly across the vertical space
     const nodeCount = graph.nodes.length;
-    const totalNodeHeight = nodeCount * nodeHeight + (nodeCount - 1) * nodePadding;
-    const startY = (maxHeight - totalNodeHeight) / 2; // Center the nodes vertically
+    
+    // First, calculate total vertical space needed accounting for different node heights
+    let totalNodeSpace = 0;
+    graph.nodes.forEach(node => {
+      const heightFactor = categoryHeightFactors[node.category] || 1.0;
+      const nodeHeight = baseNodeHeight * heightFactor;
+      totalNodeSpace += nodeHeight;
+    });
+    
+    // Add space for padding between nodes
+    const totalVerticalSpace = totalNodeSpace + (nodeCount - 1) * nodePadding;
+    const startY = (maxHeight - totalVerticalSpace) / 2; // Center the nodes vertically
     
     // Position nodes
+    let currentY = startY;
     graph.nodes.forEach((node, index) => {
-      // Horizontal position based on dates
+      // Horizontal position based on dates (length represents duration)
       node.x0 = timeScale(node.startDate);
       node.x1 = timeScale(node.endDate);
       
-      // Vertical position - evenly distributed
-      node.y0 = startY + index * (nodeHeight + nodePadding);
-      node.y1 = node.y0 + nodeHeight;
+      // Vertical position with height based on category
+      const heightFactor = categoryHeightFactors[node.category] || 1.0;
+      const nodeHeight = baseNodeHeight * heightFactor;
+      
+      node.y0 = currentY;
+      node.y1 = currentY + nodeHeight;
+      
+      // Update currentY for next node
+      currentY += nodeHeight + nodePadding;
     });
     
     // Set link widths based on value
@@ -129,7 +155,7 @@ function createTimeScale(d3, graph, width, margin) {
   }
   
   // Add some padding to the date range
-  const timePadding = (graph.maxDate - graph.minDate) * 0.05;
+  const timePadding = (graph.maxDate - graph.minDate) * 0.03;
   const startDate = new Date(graph.minDate.getTime() - timePadding);
   const endDate = new Date(graph.maxDate.getTime() + timePadding);
   
@@ -191,14 +217,14 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .classed("view", true)
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
   
-  // Add time axis
+  // Add time axis - positioned closer to the nodes to reduce vertical gap
   const timeAxis = d3.axisBottom(timeScale)
     .ticks(d3.timeMonth.every(1))
     .tickFormat(d3.timeFormat("%b %Y"));
   
   view.append("g")
     .attr("class", "time-axis")
-    .attr("transform", `translate(0, ${height - margin.top - margin.bottom})`)
+    .attr("transform", `translate(0, ${height - margin.top - margin.bottom - 10})`) // Moved up by 10px
     .call(timeAxis)
     .selectAll("text")
     .style("text-anchor", "end")
@@ -225,7 +251,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
   
   // Add titles for node hover effects
   nodes.append("title").text(d => 
-    `${d.name}\nDuration: ${d.duration} days\n${d3.timeFormat("%b %d, %Y")(d.startDate)} - ${d3.timeFormat("%b %d, %Y")(d.endDate)}`);
+    `${d.name}\nDuration: ${d.duration}\nCategory: ${d.category}\n${d3.timeFormat("%b %d, %Y")(d.startDate)} - ${d3.timeFormat("%b %d, %Y")(d.endDate)}`);
   
   // Add text labels to the left of nodes
   view.selectAll("text.node-label")
@@ -471,9 +497,9 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-id').textContent = node.id;
       document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
       document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
-      document.getElementById('node-duration').textContent = `${node.duration} days`;
+      document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
-      document.getElementById('node-phase').textContent = `Phase ${node.phase}`;
+      document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
       
       // Show connections information
       const connectionsElement = document.getElementById('node-connections');
@@ -697,9 +723,9 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-id').textContent = node.id;
       document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
       document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
-      document.getElementById('node-duration').textContent = `${node.duration} days`;
+      document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
-      document.getElementById('node-phase').textContent = `Phase ${node.phase}`;
+      document.getElementById('node-phase').textContent = `Phase ${node.phase || '1'}`;
       
       // Show connections information
       const connectionsElement = document.getElementById('node-connections');
@@ -821,11 +847,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Constants
     const width = window.innerWidth - 20;
     // Adjust height based on viewport size 
-    const height = Math.max(700, window.innerHeight - 200); // Dynamic height calculation
+    const height = Math.max(650, window.innerHeight - 250); // Reduced from 700 to 650
     const margin = {
       top: 30,
       right: 350, // Increased right margin to make room for the info panel
-      bottom: 100, // Increased bottom margin to make room for axis labels
+      bottom: 70, // Reduced from 100 to 70 to decrease x-axis gap
       left: 100    // Increased left margin to make room for project labels
     };
     const duration = 500;
@@ -841,7 +867,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Calculate dynamic sizing based on dataset size
     const totalNodes = graph.nodes.length;
-    const dynamicHeight = Math.max(height, 150 + (totalNodes * 50)); // Ensure minimum height plus space for nodes
+    const dynamicHeight = Math.max(height, 150 + (totalNodes * 40)); // Reduced from 50 to 40
     
     // Create time scale
     const timeScale = createTimeScale(d3, graph, width, margin);

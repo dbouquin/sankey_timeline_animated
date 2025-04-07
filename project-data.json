@@ -182,21 +182,6 @@
       "source": "project-2",
       "target": "project-3",
       "value": 65
-    },
-    {
-      "source": "project-4",
-      "target": "project-5",
-      "value": 55
-    },
-    {
-      "source": "project-2",
-      "target": "project-5",
-      "value": 30
-    },
-    {
-      "source": "project-5",
-      "target": "project-7",
-      "value": 70
     }
   ]
 }
