@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -58,6 +58,167 @@
   </div>
   
   <div id="visualization"></div>
+  
+  <script type="module" src="timeline-sankey.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline Sankey Diagram</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .description {
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+    #visualization {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: auto;
+      margin-bottom: 30px;
+      position: relative; /* For positioning the info panel */
+    }
+    .node {
+      cursor: pointer;
+    }
+    .link {
+      mix-blend-mode: multiply;
+    }
+    .time-axis path, .time-axis line {
+      stroke: #ccc;
+    }
+    .time-axis text {
+      font-size: 11px; /* Slightly larger font size for better readability */
+      fill: #333;      /* Darker text color for better contrast */
+    }
+    .phase-label {
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      padding: 20px;
+      background-color: #ffeeee;
+      border-radius: 5px;
+    }
+    /* Add css for better label visibility */
+    .time-axis text {
+      text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+    
+    /* Info Panel Styles */
+    #info-panel {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 250px; /* Reduced width */
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none; /* Hidden by default */
+      font-size: 12px; /* Smaller font size */
+    }
+    #info-panel h3 {
+      margin-top: 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+      color: #333;
+      font-size: 14px; /* Smaller heading */
+    }
+    .info-row {
+      display: flex;
+      margin-bottom: 6px; /* Reduced spacing */
+    }
+    .info-label {
+      font-weight: bold;
+      width: 80px; /* Reduced width */
+      color: #666;
+    }
+    .info-value {
+      flex-grow: 1;
+    }
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      color: #999;
+    }
+    .close-button:hover {
+      color: #333;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .node-color-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Timeline Sankey Diagram</h1>
+  
+  <div class="description">
+    <p>This visualization shows projects as nodes positioned on a timeline. Hover over a node to see its connections animate. Projects are positioned horizontally based on their start and end dates. Click on a project to keep it selected and view detailed information.</p>
+  </div>
+  
+  <div id="visualization">
+    <!-- Info panel will be added here dynamically -->
+    <div id="info-panel">
+      <div class="panel-header">
+        <h3><span class="node-color-indicator"></span> <span id="node-name"></span></h3>
+        <span class="close-button">&times;</span>
+      </div>
+      <div class="info-row">
+        <div class="info-label">ID:</div>
+        <div class="info-value" id="node-id"></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Start Date:</div>
+        <div class="info-value" id="node-start-date"></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">End Date:</div>
+        <div class="info-value" id="node-end-date"></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Duration:</div>
+        <div class="info-value" id="node-duration"></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Category:</div>
+        <div class="info-value" id="node-category"></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Phase:</div>
+        <div class="info-value" id="node-phase"></div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Connections:</div>
+        <div class="info-value" id="node-connections"></div>
+      </div>
+    </div>
+  </div>
   
   <script type="module" src="timeline-sankey.js"></script>
 </body>

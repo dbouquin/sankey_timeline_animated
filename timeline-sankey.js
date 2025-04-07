@@ -142,6 +142,7 @@ function createTimeScale(d3, graph, width, margin) {
 function createVisualization(d3, width, height, graph, margin, timeScale, duration) {
   const arrow = "→"; // Unicode arrow for link tooltips
   let selectedNode = null; // Track the currently selected node
+  const dateFormat = d3.timeFormat("%b %d, %Y"); // Format for displaying dates
   
   const svg = d3.create("svg")
     .attr("width", width)
@@ -395,6 +396,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         // If clicking the same node again, deselect it
         selectedNode = null;
         branchClear();
+        hideInfoPanel();
       } else {
         // First, clear any existing animations
         branchClear();
@@ -404,7 +406,115 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         
         // Trigger the animation for this node
         branchAnimate.call(this, event, node);
+        
+        // Show info panel for this node
+        showInfoPanel(node, d3);
       }
+    }
+    
+    // Show the information panel with node details
+    function showInfoPanel(node, d3) {
+      // Get the panel
+      const panel = document.getElementById('info-panel');
+      
+      // Set node color indicator
+      const colorIndicator = panel.querySelector('.node-color-indicator');
+      colorIndicator.style.backgroundColor = node.color;
+      
+      // Populate the panel with node information
+      document.getElementById('node-name').textContent = node.name;
+      document.getElementById('node-id').textContent = node.id;
+      document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
+      document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
+      document.getElementById('node-duration').textContent = `${node.duration} days`;
+      document.getElementById('node-category').textContent = node.category;
+      document.getElementById('node-phase').textContent = `Phase ${node.phase}`;
+      
+      // Show connections information
+      const connectionsElement = document.getElementById('node-connections');
+      connectionsElement.innerHTML = '';
+      
+      if (node.sourceLinks.length === 0 && node.targetLinks.length === 0) {
+        connectionsElement.textContent = 'None';
+      } else {
+        // Create a list of incoming connections
+        if (node.targetLinks.length > 0) {
+          const incomingHeader = document.createElement('div');
+          incomingHeader.textContent = 'Incoming:';
+          incomingHeader.style.fontWeight = 'bold';
+          incomingHeader.style.marginTop = '5px';
+          connectionsElement.appendChild(incomingHeader);
+          
+          const incomingList = document.createElement('ul');
+          incomingList.style.marginTop = '5px';
+          incomingList.style.paddingLeft = '20px';
+          
+          node.targetLinks.forEach(link => {
+            const item = document.createElement('li');
+            item.textContent = `${link.source.name} (Value: ${link.value})`;
+            incomingList.appendChild(item);
+          });
+          
+          connectionsElement.appendChild(incomingList);
+        }
+        
+        // Create a list of outgoing connections
+        if (node.sourceLinks.length > 0) {
+          const outgoingHeader = document.createElement('div');
+          outgoingHeader.textContent = 'Outgoing:';
+          outgoingHeader.style.fontWeight = 'bold';
+          outgoingHeader.style.marginTop = '10px';
+          connectionsElement.appendChild(outgoingHeader);
+          
+          const outgoingList = document.createElement('ul');
+          outgoingList.style.marginTop = '5px';
+          outgoingList.style.paddingLeft = '20px';
+          
+          node.sourceLinks.forEach(link => {
+            const item = document.createElement('li');
+            item.textContent = `${link.target.name} (Value: ${link.value})`;
+            outgoingList.appendChild(item);
+          });
+          
+          connectionsElement.appendChild(outgoingList);
+        }
+      }
+      
+      // Show the panel
+      panel.style.display = 'block';
+      
+      // Set up the close button
+      const closeButton = panel.querySelector('.close-button');
+      closeButton.onclick = function() {
+        hideInfoPanel();
+        // Also deselect the node if the panel is closed
+        if (selectedNode !== null) {
+          const nodeToDeselect = selectedNode;
+          selectedNode = null;
+          branchClear();
+          
+          // Reset the specific node that was selected
+          d3.select(`#node-${nodeToDeselect.id}`)
+            .transition()
+            .duration(200)
+            .attr("opacity", 0.9)
+            .attr("stroke-width", 1);
+          
+          defs.select(`#node-gradient-${nodeToDeselect.id}`)
+            .selectAll("stop")
+            .transition()
+            .duration(200)
+            .attr("offset", function(d, i) {
+              return i === 0 ? "0%" : "100%";
+            });
+        }
+      };
+    }
+    
+    // Hide the information panel
+    function hideInfoPanel() {
+      const panel = document.getElementById('info-panel');
+      panel.style.display = 'none';
     }
     
     // Clear selection when clicking on empty space
@@ -412,6 +522,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       if (selectedNode !== null) {
         selectedNode = null;
         branchClear();
+        hideInfoPanel();
       }
     });
 
@@ -479,6 +590,8 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           .attr("offset", function(d, i) {
             return i === 0 ? "0%" : "100%";  // Reset to original positions
           });
+          
+        hideInfoPanel();
       } else {
         // First reset any previously selected node
         if (selectedNode !== null) {
@@ -513,8 +626,115 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           .attr("offset", function(d, i) {
             return i === 0 ? "100%" : "100%";  // Both stops move to 100%
           });
+          
+        // Show info panel for this node
+        showInfoPanel(node, d3);
       }
     });
+    
+    // Show the information panel with node details
+    function showInfoPanel(node, d3) {
+      // Get the panel
+      const panel = document.getElementById('info-panel');
+      
+      // Set node color indicator
+      const colorIndicator = panel.querySelector('.node-color-indicator');
+      colorIndicator.style.backgroundColor = node.color;
+      
+      // Populate the panel with node information
+      document.getElementById('node-name').textContent = node.name;
+      document.getElementById('node-id').textContent = node.id;
+      document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
+      document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
+      document.getElementById('node-duration').textContent = `${node.duration} days`;
+      document.getElementById('node-category').textContent = node.category;
+      document.getElementById('node-phase').textContent = `Phase ${node.phase}`;
+      
+      // Show connections information
+      const connectionsElement = document.getElementById('node-connections');
+      connectionsElement.innerHTML = '';
+      
+      if (node.sourceLinks.length === 0 && node.targetLinks.length === 0) {
+        connectionsElement.textContent = 'None';
+      } else {
+        // Create a list of incoming connections
+        if (node.targetLinks.length > 0) {
+          const incomingHeader = document.createElement('div');
+          incomingHeader.textContent = 'Incoming:';
+          incomingHeader.style.fontWeight = 'bold';
+          incomingHeader.style.marginTop = '5px';
+          connectionsElement.appendChild(incomingHeader);
+          
+          const incomingList = document.createElement('ul');
+          incomingList.style.marginTop = '5px';
+          incomingList.style.paddingLeft = '20px';
+          
+          node.targetLinks.forEach(link => {
+            const item = document.createElement('li');
+            item.textContent = `${link.source.name} (Value: ${link.value})`;
+            incomingList.appendChild(item);
+          });
+          
+          connectionsElement.appendChild(incomingList);
+        }
+        
+        // Create a list of outgoing connections
+        if (node.sourceLinks.length > 0) {
+          const outgoingHeader = document.createElement('div');
+          outgoingHeader.textContent = 'Outgoing:';
+          outgoingHeader.style.fontWeight = 'bold';
+          outgoingHeader.style.marginTop = '10px';
+          connectionsElement.appendChild(outgoingHeader);
+          
+          const outgoingList = document.createElement('ul');
+          outgoingList.style.marginTop = '5px';
+          outgoingList.style.paddingLeft = '20px';
+          
+          node.sourceLinks.forEach(link => {
+            const item = document.createElement('li');
+            item.textContent = `${link.target.name} (Value: ${link.value})`;
+            outgoingList.appendChild(item);
+          });
+          
+          connectionsElement.appendChild(outgoingList);
+        }
+      }
+      
+      // Show the panel
+      panel.style.display = 'block';
+      
+      // Set up the close button
+      const closeButton = panel.querySelector('.close-button');
+      closeButton.onclick = function() {
+        hideInfoPanel();
+        // Also deselect the node if the panel is closed
+        if (selectedNode !== null) {
+          const nodeToDeselect = selectedNode;
+          selectedNode = null;
+          
+          // Reset the specific node that was selected
+          d3.select(`#node-${nodeToDeselect.id}`)
+            .transition()
+            .duration(200)
+            .attr("opacity", 0.9)
+            .attr("stroke-width", 1);
+          
+          defs.select(`#node-gradient-${nodeToDeselect.id}`)
+            .selectAll("stop")
+            .transition()
+            .duration(200)
+            .attr("offset", function(d, i) {
+              return i === 0 ? "0%" : "100%";
+            });
+        }
+      };
+    }
+    
+    // Hide the information panel
+    function hideInfoPanel() {
+      const panel = document.getElementById('info-panel');
+      panel.style.display = 'none';
+    }
     
     // Clear selection when clicking on empty space
     svg.on("click", () => {
@@ -535,6 +755,8 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           .attr("offset", function(d, i) {
             return i === 0 ? "0%" : "100%";  // Reset to original positions
           });
+          
+        hideInfoPanel();
       }
     });
   }
