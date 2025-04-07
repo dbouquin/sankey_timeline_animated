@@ -148,11 +148,31 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
   
   const defs = svg.append("defs");
   
-  // Add definitions for the linear gradients - only if there are links
+  // Add definitions for the linear gradients for nodes
+  const nodeGradients = defs.selectAll("linearGradient.node-gradient")
+    .data(graph.nodes)
+    .join("linearGradient")
+    .attr("class", "node-gradient")
+    .attr("id", d => `node-gradient-${d.id}`)
+    .attr("gradientUnits", "userSpaceOnUse")
+    .attr("x1", d => d.x0)
+    .attr("x2", d => d.x1);
+  
+  // Add two stops to each gradient - one with the node color and one that's gray
+  nodeGradients.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", d => d.color);
+  
+  nodeGradients.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#cccccc");  // Light gray
+  
+  // Add definitions for the linear gradients for links - only if there are links
   if (graph.links.length > 0) {
-    const gradients = defs.selectAll("linearGradient")
+    const gradients = defs.selectAll("linearGradient.link-gradient")
       .data(graph.links)
       .join("linearGradient")
+      .attr("class", "link-gradient")
       .attr("id", d => d.gradient)
       .attr("gradientUnits", "userSpaceOnUse")
       .attr("x1", d => d.source.x1) // End of source node
@@ -196,7 +216,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .attr("height", d => Math.max(1, d.y1 - d.y0))
     .attr("rx", 5) // Rounded corners
     .attr("ry", 5)
-    .attr("fill", d => d.color)
+    .attr("fill", d => `url(#node-gradient-${d.id})`) // Use gradient instead of solid color
     .attr("opacity", 0.9)
     .attr("stroke", d => d3.rgb(d.color).darker())
     .attr("stroke-width", 1);
@@ -220,6 +240,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .text(d => d.name);
   
   // Only create links if there are any connections
+  let gradientLinks;
   if (graph.links.length > 0) {
     // Create a custom link curve that adjusts based on the distance between nodes
     const createLinkPath = (d) => {
@@ -265,7 +286,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       }
     }
     
-    const gradientLinks = view.selectAll("path.gradient-link")
+    gradientLinks = view.selectAll("path.gradient-link")
       .data(graph.links)
       .join("path")
       .classed("gradient-link", true)
@@ -285,6 +306,15 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
         .duration(200)
         .attr("opacity", 1)
         .attr("stroke-width", 2);
+      
+      // Animate the node gradient
+      defs.select(`#node-gradient-${node.id}`)
+        .selectAll("stop")
+        .transition()
+        .duration(duration)
+        .attr("offset", function(d, i) {
+          return i === 0 ? "100%" : "100%";  // Both stops move to 100%
+        });
       
       // Only animate if the node has outgoing links
       if (node.sourceLinks && node.sourceLinks.length > 0) {
@@ -317,13 +347,22 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     
     // Reset animation when mouse leaves a node
     function branchClear() {
-      // Reset node appearance
+      // Reset node appearance and gradients
       nodes.transition()
         .duration(200)
         .attr("opacity", 0.9)
         .attr("stroke-width", 1);
       
-      // Stop and reset all gradient animations
+      // Reset all node gradients
+      defs.selectAll("linearGradient.node-gradient")
+        .selectAll("stop")
+        .transition()
+        .duration(200)
+        .attr("offset", function(d, i) {
+          return i === 0 ? "0%" : "100%";  // Reset to original positions
+        });
+      
+      // Stop and reset all gradient animations for links
       if (gradientLinks.size() > 0) {
         gradientLinks.transition();
         gradientLinks.attr("stroke-opacity", 0)
@@ -336,19 +375,37 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       .on("mouseout", branchClear);
   } else {
     // If there are no links, still add hover effect to nodes
-    nodes.on("mouseover", function() {
+    nodes.on("mouseover", function(event, node) {
       d3.select(this)
         .transition()
         .duration(200)
         .attr("opacity", 1)
         .attr("stroke-width", 2);
+      
+      // Animate the node gradient
+      defs.select(`#node-gradient-${node.id}`)
+        .selectAll("stop")
+        .transition()
+        .duration(duration)
+        .attr("offset", function(d, i) {
+          return i === 0 ? "100%" : "100%";  // Both stops move to 100%
+        });
     })
-    .on("mouseout", function() {
+    .on("mouseout", function(event, node) {
       d3.select(this)
         .transition()
         .duration(200)
         .attr("opacity", 0.9)
         .attr("stroke-width", 1);
+      
+      // Reset the node gradient
+      defs.select(`#node-gradient-${node.id}`)
+        .selectAll("stop")
+        .transition()
+        .duration(200)
+        .attr("offset", function(d, i) {
+          return i === 0 ? "0%" : "100%";  // Reset to original positions
+        });
     });
   }
   
@@ -401,3 +458,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('visualization').appendChild(errorElement);
   }
 });
+
