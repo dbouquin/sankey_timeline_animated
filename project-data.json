@@ -106,7 +106,7 @@
       "endDate": "2025-01-29",
       "duration": "47.3 weeks",
       "category": "L",
-      "phases": 2
+      "phases": 3
     },
     {
       "id": "project-13",
@@ -170,18 +170,27 @@
       "duration": "13.4 weeks",
       "category": "M",
       "phases": 1
+    },
+    {
+      "id": "project-19",
+      "name": "OHS PIR Migration",
+      "startDate": "2025-02-18",
+      "endDate": "2025-04-01",
+      "duration": "6 weeks",
+      "category": "M",
+      "phases": 1
     }
   ],
   "connections": [
     {
-      "source": "project-1",
-      "target": "project-2",
-      "value": 40
+      "source": "project-13",
+      "target": "project-19",
+      "value": 100
     },
     {
-      "source": "project-2",
-      "target": "project-3",
-      "value": 65
+      "source": "project-10",
+      "target": "project-11",
+      "value": 50
     }
   ]
 }

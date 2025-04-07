@@ -14,11 +14,11 @@ function createLayout(timeScale, height, margin, totalNodes) {
   return function(graph) {
     // Define height factors for different categories
     const categoryHeightFactors = {
-      "XS": 0.6,  // Smallest height
-      "S": 0.8,   // Small height
-      "M": 1.0,   // Medium height (baseline)
-      "L": 1.2,   // Large height
-      "XL": 1.5   // Extra large height
+      "XS": 0.25,  // Smallest height
+      "S": 0.6,   // Small height
+      "M": 1.1,   // Medium height (baseline)
+      "L": 1.4,   // Large height
+      "XL": 1.75   // Extra large height
     };
     
     // Calculate node positions based on time scale
@@ -26,7 +26,6 @@ function createLayout(timeScale, height, margin, totalNodes) {
     const nodePadding = Math.min(20, Math.max(5, 300 / totalNodes)); // Adjust padding based on total count
     const maxHeight = height - margin.top - margin.bottom - 30; // Reduced extra padding
     
-    // Position nodes without grouping by phase
     // Distribute nodes evenly across the vertical space
     const nodeCount = graph.nodes.length;
     
@@ -193,7 +192,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
   
   nodeGradients.append("stop")
     .attr("offset", "100%")
-    .attr("stop-color", "#cccccc");  // Light gray
+    .attr("stop-color", "#f8f8f8");  // Light gray
   
   // Add definitions for the linear gradients for links - only if there are links
   if (graph.links.length > 0) {
@@ -263,7 +262,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .attr("dy", "0.35em")
     .attr("fill", "#333") // Dark text for better visibility
     .attr("text-anchor", "end") // Right-align text
-    .attr("font-size", 10)
+    .attr("font-size", 12)
     .attr("font-family", "Arial, sans-serif")
     .text(d => d.name);
     
@@ -499,7 +498,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
       document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
-      document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
+      document.getElementById('node-phase').textContent = `${node.phases || '1'}`;
       
       // Show connections information
       const connectionsElement = document.getElementById('node-connections');
@@ -851,7 +850,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const margin = {
       top: 30,
       right: 350, // Increased right margin to make room for the info panel
-      bottom: 70, // Reduced from 100 to 70 to decrease x-axis gap
+      bottom: 50, // Reduced from 100 to 70 to decrease x-axis gap
       left: 100    // Increased left margin to make room for project labels
     };
     const duration = 500;
