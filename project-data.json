@@ -71,6 +71,15 @@
       "duration": 105,
       "category": "deployment",
       "phase": 5
+    },
+    {
+      "id": "project-i",
+      "name": "Project I",
+      "startDate": "2023-10-16",
+      "endDate": "2023-12-23",
+      "duration": 45,
+      "category": "deployment",
+      "phase": 2
     }
   ],
   "connections": [

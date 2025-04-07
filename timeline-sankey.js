@@ -1,6 +1,8 @@
 // Load project data from a local file
 async function loadProjectData() {
-  const response = await fetch('project-data.json');
+  // Add a timestamp to prevent caching
+  const timestamp = new Date().getTime();
+  const response = await fetch(`project-data.json?t=${timestamp}`);
   if (!response.ok) {
     throw new Error(`Error loading project data: ${response.statusText}`);
   }
@@ -215,21 +217,6 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .attr("text-anchor", "middle")
     .attr("font-size", 10)
     .attr("font-family", "Arial, sans-serif")
-    .text(d => d.name);
-  
-  // Add project name labels on the left
-  view.selectAll("text.project-label")
-    .data(graph.nodes)
-    .join("text")
-    .classed("project-label", true)
-    .attr("x", -10)
-    .attr("y", d => (d.y0 + d.y1) / 2)
-    .attr("dy", "0.35em")
-    .attr("fill", d => d.color)
-    .attr("text-anchor", "end")
-    .attr("font-size", 12)
-    .attr("font-family", "Arial, sans-serif")
-    .attr("font-weight", "bold")
     .text(d => d.name);
   
   // Only create links if there are any connections
