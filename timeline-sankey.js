@@ -16,13 +16,13 @@ function createLayout(timeScale, height, margin, totalNodes) {
     const categoryHeightFactors = {
       "XS": 0.25,  // Smallest height
       "S": 0.6,   // Small height
-      "M": 1.0,   // Medium height (baseline)
+      "M": 1.0,   // Medium height 
       "L": 1.6,   // Large height
       "XL": 2.1   // Extra large height
     };
     
     // Calculate node positions based on time scale
-    const baseNodeHeight = Math.min(25, Math.max(12, 500 / totalNodes)); // Base height for category "M"
+    const baseNodeHeight = Math.min(25, Math.max(12, 500 / totalNodes)); // Base height 
     const nodePadding = Math.min(20, Math.max(5, 300 / totalNodes)); // Adjust padding based on total count
     const maxHeight = height - margin.top - margin.bottom - 30; // Reduced extra padding
     

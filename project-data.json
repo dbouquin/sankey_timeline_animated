@@ -8,7 +8,7 @@
       "duration": "31.4 weeks",
       "category": "L",
       "phase": 1,
-      "description": "Test",
+      "description": "Automate Program Information Report processing pipeline to create an analysis-ready longitudinal dataset from at least 2007 onward",
       "skills": ["Data Engineering", "ML", "Dashboard", "Database"]
     },
     {
@@ -30,7 +30,7 @@
       "duration": "31.4 weeks",
       "category": "XS",
       "phase": 1,
-      "description": "",
+      "description": "Coach Division of Data & Improvement Evidence Capacity Team in analysis planning and code development",
       "skills": ["Analytics", "Documentation"]
     },
     {
@@ -41,7 +41,7 @@
       "duration": "2.4 weeks",
       "category": "S",
       "phase": 1,
-      "description": "",
+      "description": "Create code standards for use within the data surge support team",
       "skills": ["Documentation"]
     },
     {
@@ -52,7 +52,7 @@
       "duration": "34 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Catalyze support for ACF's Tableau Creator community",
       "skills": ["Professional Services"]
     },
     {
@@ -63,7 +63,7 @@
       "duration": "19 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Design a flexible machine-learning cloud environment that can be spun up and down based on project need",
       "skills": ["ML", "Cloud Architecture"]
     },
     {
@@ -74,7 +74,7 @@
       "duration": "47.3 weeks",
       "category": "L",
       "phase": 3,
-      "description": "",
+      "description": "Determine what a low-deobligated grant looks like",
       "skills": ["Dashboard", "Data Engineering", "ML"]
     },
     {
@@ -85,7 +85,7 @@
       "duration": "17.3 weeks",
       "category": "L",
       "phase": 2,
-      "description": "",
+      "description": "Explore what insights can be uncovered in ACF's federal employee viewpoint survey (FEVS) data – tackling 1-2 questions/week.",
       "skills": ["Analytics"]
     },
     {
@@ -96,7 +96,7 @@
       "duration": "29.4 weeks",
       "category": "XS",
       "phase": 1,
-      "description": "",
+      "description": "Catalyze support for ACF's Qualtrics community",
       "skills": ["Professional Services"]
     },
     {
@@ -107,7 +107,7 @@
       "duration": "< 1 week",
       "category": "XS",
       "phase": 1,
-      "description": "",
+      "description": "Update existing disbursement model with final FY23 decision book data",
       "skills": ["Dashboard"]
     },
     {
@@ -118,7 +118,7 @@
       "duration": "18.6 weeks",
       "category": "S",
       "phase": 1,
-      "description": "",
+      "description": "Provide thought partnership to OCC as they build out their internal operations system with Smartsheet",
       "skills": ["Dashboard"]
     },
     {
@@ -129,7 +129,7 @@
       "duration": "9 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "See if certain characteristics of Tribal Maternal, Infant, and Early Childhood Home Visiting (TMIECHV) grant recipients are associated with grant performance in a set of standardized performance measures",
       "skills": ["Analytics"]
     },
     {
@@ -140,7 +140,7 @@
       "duration": "12.3 weeks",
       "category": "S",
       "phase": 1,
-      "description": "",
+      "description": "Identify ways other federal agencies are using AI that ACF may benefit from as well",
       "skills":["AI", "Dashboard"]
     },
     {
@@ -151,7 +151,7 @@
       "duration": "12.3 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Explore the limits of GFE laptops and identify useful tools to perform natural language processing",
       "skills": ["AI"]
     },
     {
@@ -162,7 +162,7 @@
       "duration": "13.4 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Create a public-facing, beautiful interactive tool that shows ACF's investments geographically with trends and spotlight stories",
       "skills": ["Dashboard"]
     },
     {
@@ -173,7 +173,7 @@
       "duration": "18 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Migrate disparate TANF policy trackers into unified Zendesk knowledge base format",
       "skills": ["AI", "Dashboard", "Data Engineering"]
     },
     {
@@ -184,7 +184,7 @@
       "duration": "7.3 weeks",
       "category": "S",
       "phase": 1,
-      "description": "",
+      "description": "Automate contact list organization and top-line research on organizations",
       "skills": ["AI"]
     },
     {
@@ -195,7 +195,7 @@
       "duration": "33.1 weeks",
       "category": "L",
       "phase": 1,
-      "description": "",
+      "description": "Establish a robust database governance model to support ORR in their UC Portal database modernization and improvements efforts",
       "skills": ["Data Engineering", "Database"]
     },
     {
@@ -206,7 +206,7 @@
       "duration": "8.6 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Assemble a structured database of geocoded TANF field office addresses from state and territory government websites",
       "skills": ["Web Scraping", "AI", "Database", "Dashboard"]
     },
     {
@@ -217,7 +217,7 @@
       "duration": "28.7 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Build a dashboard for OGM Strategic Operations and Innovation Division (SOID) Audits team with audit details that they can share with program offices",
       "skills": ["AI", "Database"]
     },
     {
@@ -228,7 +228,7 @@
       "duration": "18 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Create longitudinal dataset of TANF financial data for easier public use",
       "skills": ["Data Engineering", "Dashboard"]
     },
     {
@@ -239,7 +239,7 @@
       "duration": "4 weeks",
       "category": "S",
       "phase": 1,
-      "description": "",
+      "description": "Test whether we can reasonably tag the specific populations and services being delivered by an ACF grantee based on usaspending.gov data",
       "skills": ["AI"]
     },
     {
@@ -250,7 +250,7 @@
       "duration": "12 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Implement a minimum viable product (MVP) of the UAC Portal Oracle database data governance model. This would allow an initial working data governance product to support the UAC Portal data governance activities.",
       "skills": ["Data Engineering", "Database"]
     },
     {
@@ -261,7 +261,7 @@
       "duration": "12.4 weeks",
       "category": "L",
       "phase": 1,
-      "description": "",
+      "description": "To have the ability to conduct real testing in non-production environments.  Identify the databases, tables, fields to be de-identify and replace with synthetic data. Perform an automated or programmatic means to replace, containerize, and tag the actual data fields with the synthetic data. Create and maintain iterations of the synthetic data thus allows other database teams and vendors to have the look and feel of the production database for their development and testing needs. ",
       "skills": ["Data Engineering", "Database"]
     },
     {
@@ -272,7 +272,7 @@
       "duration": "12.4 weeks",
       "category": "L",
       "phase": 1,
-      "description": "",
+      "description": "To maintain synchronization of UC Oracle database schemas between environments. Provide guidance to determine the correct schema.  Provide automated monitoring for deviations of schemas.",
       "skills": ["Data Engineering", "Database"]
     },
     {
@@ -283,7 +283,7 @@
       "duration": "7.3 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Evaluate Credal AI platform for usage and context metrics with pilot of 100 users",
       "skills": ["AI", "Dashboard"]
     },
     {
@@ -294,7 +294,7 @@
       "duration": "6 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Migrate the PIR pipeline to AWS",
       "skills": ["Data Engineering", "ML", "Dashboard", "Database", "Cloud Architecture"]
     },
     {
@@ -305,7 +305,7 @@
       "duration": "6.3 weeks",
       "category": "M",
       "phase": 1,
-      "description": "",
+      "description": "Gather, aggregate, and normalize data about entities that receive CCDF funding through state block grants, with a focus on business names and addresses.",
       "skills": ["Web Scraping"]
     },
     {
@@ -316,7 +316,7 @@
       "duration": "54.7 weeks",
       "category": "L",
       "phase": 1,
-      "description": "",
+      "description": "Advise ORR UC data team as they turn their organically-grown analysis datasets that are backing Tableau dashboards into rationalized data sources",
       "skills": ["Data Engineering", "Database"]
     }
   ],
