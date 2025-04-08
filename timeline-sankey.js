@@ -317,7 +317,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     
     // Add <title> hover effect on links
     links.append("title").text(d => 
-      `${d.source.name} ${arrow} ${d.target.name}\nValue: ${d.value}`);
+      `${d.source.name} ${arrow} ${d.target.name}`);
       
     // Define the dash behavior for colored gradients
     setDash = function(link) {
@@ -514,7 +514,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           const incomingHeader = document.createElement('div');
           incomingHeader.textContent = 'Incoming:';
           incomingHeader.style.fontWeight = 'bold';
-          incomingHeader.style.marginTop = '5px';
+          incomingHeader.style.marginTop = '15px';
           connectionsElement.appendChild(incomingHeader);
           
           const incomingList = document.createElement('ul');
@@ -524,7 +524,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           
           node.targetLinks.forEach(link => {
             const item = document.createElement('li');
-            item.textContent = `${link.source.name} (${link.value})`;
+            item.textContent = `${link.source.name}`;
             item.style.marginBottom = '2px';
             incomingList.appendChild(item);
           });
@@ -750,7 +750,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           
           node.targetLinks.forEach(link => {
             const item = document.createElement('li');
-            item.textContent = `${link.source.name} (Value: ${link.value})`;
+            item.textContent = `${link.source.name}`;
             incomingList.appendChild(item);
           });
           
@@ -771,7 +771,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           
           node.sourceLinks.forEach(link => {
             const item = document.createElement('li');
-            item.textContent = `${link.target.name} (Value: ${link.value})`;
+            item.textContent = `${link.target.name}`;
             outgoingList.appendChild(item);
           });
           
