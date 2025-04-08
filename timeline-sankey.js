@@ -309,8 +309,8 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       .join("path")
       .classed("link", true)
       .attr("d", createLinkPath)
-      .attr("stroke", "black")
-      .attr("stroke-opacity", 0.1)
+      .attr("stroke", "grey")
+      .attr("stroke-opacity", 0.05)
       .attr("stroke-width", d => Math.max(1, d.width))
       .attr("fill", "none");
     
