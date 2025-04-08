@@ -80,4 +80,4 @@ To run this visualization:
 
 ## Acknowledgements
 
-This visualization is based on the Observable notebook "[Sankey With Animated Gradients](https://observablehq.com/@jarrettmeyer/sankey-with-animated-gradients)" by Jarrett Meyer, adapted to position projects on a timeline.
+This visualization is based on the Observable notebook "[Sankey With Animated Gradients](https://observablehq.com/@jarrettmeyer/sankey-with-animated-gradients)" by Jarrett Meyer, adapted to position projects on a timeline with an interactive information panel.
