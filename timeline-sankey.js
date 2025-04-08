@@ -15,10 +15,10 @@ function createLayout(timeScale, height, margin, totalNodes) {
     // Define height factors for different categories
     const categoryHeightFactors = {
       "XS": 0.25,  // Smallest height
-      "S": 0.5,   // Small height
+      "S": 0.6,   // Small height
       "M": 1.0,   // Medium height (baseline)
-      "L": 1.5,   // Large height
-      "XL": 2.0   // Extra large height
+      "L": 1.6,   // Large height
+      "XL": 2.1   // Extra large height
     };
     
     // Calculate node positions based on time scale
@@ -545,7 +545,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           
           node.sourceLinks.forEach(link => {
             const item = document.createElement('li');
-            item.textContent = `${link.target.name} (${link.value})`;
+            item.textContent = `${link.target.name}`;
             item.style.marginBottom = '2px';
             outgoingList.appendChild(item);
           });
