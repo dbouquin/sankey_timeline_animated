@@ -73,15 +73,6 @@ To run this visualization:
    ```
 4. Open a browser and navigate to the local server address 
 
-## Modifying the Visualization
-
-The most common modifications include:
-
-- Editing `project-data.json` to update project data
-- Adjusting the `height`, `margin`, and `duration` variables in the main module
-- Customizing the color scheme by modifying the `color` function
-- Changing link curve shapes by adjusting the `createLinkPath` function
-
 ## Dependencies
 
 - D3.js (version 6)
