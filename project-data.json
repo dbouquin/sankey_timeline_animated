@@ -7,7 +7,8 @@
       "endDate": "2024-05-24",
       "duration": "31.4 weeks",
       "category": "L",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-2",
@@ -16,7 +17,8 @@
       "endDate": "2024-02-09",
       "duration": "12.6 weeks",
       "category": "XL",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-3",
@@ -25,7 +27,8 @@
       "endDate": "2024-03-29",
       "duration": "31.4 weeks",
       "category": "XS",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-4",
@@ -34,7 +37,8 @@
       "endDate": "2024-02-29",
       "duration": "2.4 weeks",
       "category": "S",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-5",
@@ -43,7 +47,8 @@
       "endDate": "2024-10-07",
       "duration": "34 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-6",
@@ -52,7 +57,8 @@
       "endDate": "2024-07-08",
       "duration": "19 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-7",
@@ -61,7 +67,8 @@
       "endDate": "2025-01-29",
       "duration": "47.3 weeks",
       "category": "L",
-      "phase": 3
+      "phase": 3,
+      "description": ""
     },
     {
       "id": "project-8",
@@ -70,7 +77,8 @@
       "endDate": "2024-07-10",
       "duration": "17.3 weeks",
       "category": "L",
-      "phase": 2
+      "phase": 2,
+      "description": ""
     },
     {
       "id": "project-9",
@@ -79,7 +87,8 @@
       "endDate": "2024-10-07",
       "duration": "29.4 weeks",
       "category": "XS",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-10",
@@ -88,7 +97,8 @@
       "endDate": "2024-03-22",
       "duration": "< 1 week",
       "category": "XS",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-11",
@@ -97,7 +107,8 @@
       "endDate": "2024-08-06",
       "duration": "18.6 weeks",
       "category": "S",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-12",
@@ -106,7 +117,8 @@
       "endDate": "2024-06-05",
       "duration": "9 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-13",
@@ -115,7 +127,8 @@
       "endDate": "2024-08-14",
       "duration": "12.3 weeks",
       "category": "S",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-14",
@@ -124,7 +137,8 @@
       "endDate": "2024-08-14",
       "duration": "12.3 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-15",
@@ -133,7 +147,8 @@
       "endDate": "2024-08-22",
       "duration": "13.4 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-16",
@@ -142,7 +157,8 @@
       "endDate": "2024-10-18",
       "duration": "18 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-17",
@@ -151,7 +167,8 @@
       "endDate": "2024-08-28",
       "duration": "7.3 weeks",
       "category": "S",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-18",
@@ -160,7 +177,8 @@
       "endDate": "2025-04-08",
       "duration": "33.1 weeks",
       "category": "L",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-19",
@@ -169,7 +187,8 @@
       "endDate": "2024-10-25",
       "duration": "8.6 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-20",
@@ -178,7 +197,8 @@
       "endDate": "2025-04-08",
       "duration": "28.7 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-21",
@@ -187,7 +207,8 @@
       "endDate": "2025-02-26",
       "duration": "18 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-22",
@@ -196,7 +217,8 @@
       "endDate": "2024-12-31",
       "duration": "4 weeks",
       "category": "S",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-23",
@@ -205,7 +227,8 @@
       "endDate": "2025-03-10",
       "duration": "12 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-24",
@@ -214,7 +237,8 @@
       "endDate": "2025-05-09",
       "duration": "12.4 weeks",
       "category": "L",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-25",
@@ -223,7 +247,8 @@
       "endDate": "2025-05-09",
       "duration": "12.4 weeks",
       "category": "L",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-26",
@@ -232,7 +257,8 @@
       "endDate": "2025-04-04",
       "duration": "7.3 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-27",
@@ -241,7 +267,8 @@
       "endDate": "2025-04-01",
       "duration": "6 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-28",
@@ -250,7 +277,8 @@
       "endDate": "2025-04-08",
       "duration": "6.3 weeks",
       "category": "M",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     },
     {
       "id": "project-29",
@@ -259,7 +287,8 @@
       "endDate": "2025-04-08",
       "duration": "54.7 weeks",
       "category": "L",
-      "phase": 1
+      "phase": 1,
+      "description": ""
     }
   ],
   "connections": [
