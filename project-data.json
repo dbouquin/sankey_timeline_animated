@@ -8,7 +8,8 @@
       "duration": "31.4 weeks",
       "category": "L",
       "phase": 1,
-      "description": "Automate Program Information Report processing pipeline to create an analysis-ready longitudinal dataset from at least 2007 onward"
+      "description": "Test",
+      "skills": ["Data Engineering", "ML", "Dashboard", "Database"]
     },
     {
       "id": "project-2",
@@ -18,7 +19,8 @@
       "duration": "12.6 weeks",
       "category": "XL",
       "phase": 1,
-      "description": "Categorize by topic and sentiment and summarize public comments on new proposed rule to enable OHS content team to formulate informed responses to the ruling"
+      "description": "Categorize by topic and sentiment and summarize public comments on new proposed rule to enable OHS content team to formulate informed responses to the ruling",
+      "skills": ["AI", "Dashboard"]
     },
     {
       "id": "project-3",
@@ -28,7 +30,8 @@
       "duration": "31.4 weeks",
       "category": "XS",
       "phase": 1,
-      "description": ""
+      "description": "",
+      "skills": ["Analytics", "Documentation"]
     },
     {
       "id": "project-4",
@@ -38,7 +41,8 @@
       "duration": "2.4 weeks",
       "category": "S",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Documentation"]
     },
     {
       "id": "project-5",
@@ -48,7 +52,8 @@
       "duration": "34 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Professional Services"]
     },
     {
       "id": "project-6",
@@ -58,7 +63,8 @@
       "duration": "19 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["ML", "Cloud Architecture"]
     },
     {
       "id": "project-7",
@@ -68,7 +74,8 @@
       "duration": "47.3 weeks",
       "category": "L",
       "phase": 3,
-      "description": "Test"
+      "description": "",
+      "skills": ["Dashboard", "Data Engineering", "ML"]
     },
     {
       "id": "project-8",
@@ -78,7 +85,8 @@
       "duration": "17.3 weeks",
       "category": "L",
       "phase": 2,
-      "description": "Test"
+      "description": "",
+      "skills": ["Analytics"]
     },
     {
       "id": "project-9",
@@ -88,7 +96,8 @@
       "duration": "29.4 weeks",
       "category": "XS",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Professional Services"]
     },
     {
       "id": "project-10",
@@ -98,7 +107,8 @@
       "duration": "< 1 week",
       "category": "XS",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Dashboard"]
     },
     {
       "id": "project-11",
@@ -108,7 +118,8 @@
       "duration": "18.6 weeks",
       "category": "S",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Dashboard"]
     },
     {
       "id": "project-12",
@@ -118,7 +129,8 @@
       "duration": "9 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Analytics"]
     },
     {
       "id": "project-13",
@@ -128,7 +140,8 @@
       "duration": "12.3 weeks",
       "category": "S",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills":["AI", "Dashboard"]
     },
     {
       "id": "project-14",
@@ -138,7 +151,8 @@
       "duration": "12.3 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["AI"]
     },
     {
       "id": "project-15",
@@ -148,7 +162,8 @@
       "duration": "13.4 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Dashboard"]
     },
     {
       "id": "project-16",
@@ -158,7 +173,8 @@
       "duration": "18 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["AI", "Dashboard", "Data Engineering"]
     },
     {
       "id": "project-17",
@@ -168,7 +184,8 @@
       "duration": "7.3 weeks",
       "category": "S",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["AI"]
     },
     {
       "id": "project-18",
@@ -178,7 +195,8 @@
       "duration": "33.1 weeks",
       "category": "L",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Data Engineering", "Database"]
     },
     {
       "id": "project-19",
@@ -188,7 +206,8 @@
       "duration": "8.6 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Web Scraping", "AI", "Database", "Dashboard"]
     },
     {
       "id": "project-20",
@@ -198,7 +217,8 @@
       "duration": "28.7 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["AI", "Database"]
     },
     {
       "id": "project-21",
@@ -208,7 +228,8 @@
       "duration": "18 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Data Engineering", "Dashboard"]
     },
     {
       "id": "project-22",
@@ -218,7 +239,8 @@
       "duration": "4 weeks",
       "category": "S",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["AI"]
     },
     {
       "id": "project-23",
@@ -228,7 +250,8 @@
       "duration": "12 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Data Engineering", "Database"]
     },
     {
       "id": "project-24",
@@ -238,7 +261,8 @@
       "duration": "12.4 weeks",
       "category": "L",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Data Engineering", "Database"]
     },
     {
       "id": "project-25",
@@ -248,7 +272,8 @@
       "duration": "12.4 weeks",
       "category": "L",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Data Engineering", "Database"]
     },
     {
       "id": "project-26",
@@ -258,7 +283,8 @@
       "duration": "7.3 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["AI", "Dashboard"]
     },
     {
       "id": "project-27",
@@ -268,7 +294,8 @@
       "duration": "6 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Data Engineering", "ML", "Dashboard", "Database", "Cloud Architecture"]
     },
     {
       "id": "project-28",
@@ -278,7 +305,8 @@
       "duration": "6.3 weeks",
       "category": "M",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Web Scraping"]
     },
     {
       "id": "project-29",
@@ -288,7 +316,8 @@
       "duration": "54.7 weeks",
       "category": "L",
       "phase": 1,
-      "description": "Test"
+      "description": "",
+      "skills": ["Data Engineering", "Database"]
     }
   ],
   "connections": [
