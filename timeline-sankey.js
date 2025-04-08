@@ -15,10 +15,10 @@ function createLayout(timeScale, height, margin, totalNodes) {
     // Define height factors for different categories
     const categoryHeightFactors = {
       "XS": 0.25,  // Smallest height
-      "S": 0.6,   // Small height
-      "M": 1.1,   // Medium height (baseline)
-      "L": 1.4,   // Large height
-      "XL": 1.75   // Extra large height
+      "S": 0.5,   // Small height
+      "M": 1.0,   // Medium height (baseline)
+      "L": 1.5,   // Large height
+      "XL": 2.0   // Extra large height
     };
     
     // Calculate node positions based on time scale
