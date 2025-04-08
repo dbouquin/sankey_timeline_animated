@@ -73,14 +73,25 @@
     .info-row {
       display: flex;
       margin-bottom: 6px; /* Reduced spacing */
+      align-items: flex-start; /* Align items to the top for multi-line content */
     }
     .info-label {
       font-weight: bold;
       width: 80px; /* Reduced width */
       color: #666;
+      flex-shrink: 0; /* Prevent label from shrinking */
     }
     .info-value {
       flex-grow: 1;
+      word-wrap: break-word; /* Enable word wrapping */
+      max-width: calc(100% - 85px); /* Ensure text doesn't overflow */
+    }
+
+    /* Special styling for description */
+    #node-description {
+      display: block;
+      line-height: 1.4;
+      margin-top: 4px;
     }
     .close-button {
       position: absolute;
