@@ -497,7 +497,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-name').textContent = node.name;
       document.getElementById('node-id').textContent = node.id;
       document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
-      document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
+      document.getElementById('node-end-date').textContent = `${dateFormat(node.endDate) || '-'}`;
       document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
       document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
@@ -742,7 +742,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-name').textContent = node.name;
       document.getElementById('node-id').textContent = node.id;
       document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
-      document.getElementById('node-end-date').textContent = dateFormat(node.endDate);
+      document.getElementById('node-end-date').textContent = `${dateFormat(node.endDate) || '-'}`;
       document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
       document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
