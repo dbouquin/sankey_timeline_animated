@@ -39,7 +39,7 @@ function createLayout(timeScale, height, margin, totalNodes) {
     
     // Add space for padding between nodes
     const totalVerticalSpace = totalNodeSpace + (nodeCount - 1) * nodePadding;
-    const startY = (maxHeight - totalVerticalSpace) / 2; // Center the nodes vertically
+    const startY = (maxHeight - totalVerticalSpace) / 50; // Change to 2 to center the nodes vertically
     
     // Position nodes
     let currentY = startY;
@@ -107,7 +107,7 @@ function processData(projectData, d3) {
       category: project.category,
       phase: project.phase,
       // Assign a unique color to each project
-      color: d3.interpolateRainbow(i / projects.length),
+      color: d3.interpolateSpectral(i / projects.length),
       value: project.duration, // Use duration as the node value
       sourceLinks: [], // Initialize empty arrays for links
       targetLinks: []
@@ -223,7 +223,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
   
   view.append("g")
     .attr("class", "time-axis")
-    .attr("transform", `translate(0, ${height - margin.top - margin.bottom - 10})`) // Moved up by 10px
+    .attr("transform", `translate(0, ${height - margin.top - margin.bottom - 390})`) // Moved up by 390px
     .call(timeAxis)
     .selectAll("text")
     .style("text-anchor", "end")
@@ -846,11 +846,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Constants
     const width = window.innerWidth - 20;
     // Adjust height based on viewport size 
-    const height = Math.max(650, window.innerHeight - 250); // Reduced from 700 to 650
+    const height = Math.max(600, window.innerHeight - 250); // Reduced from 650
     const margin = {
       top: 30,
       right: 350, // Increased right margin to make room for the info panel
-      bottom: 50, // Reduced from 100 to 70 to decrease x-axis gap
+      bottom: 50, 
       left: 100    // Increased left margin to make room for project labels
     };
     const duration = 500;
@@ -866,7 +866,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Calculate dynamic sizing based on dataset size
     const totalNodes = graph.nodes.length;
-    const dynamicHeight = Math.max(height, 150 + (totalNodes * 40)); // Reduced from 50 to 40
+    const dynamicHeight = Math.max(height, 150 + (totalNodes * 40)); 
     
     // Create time scale
     const timeScale = createTimeScale(d3, graph, width, margin);
@@ -891,3 +891,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('visualization').appendChild(errorElement);
   }
 });
+

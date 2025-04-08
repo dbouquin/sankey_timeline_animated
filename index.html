@@ -9,20 +9,16 @@
       font-family: Arial, sans-serif;
       margin: 20px;
     }
-    h1 {
+    h2 {
       color: #333;
-    }
-    .description {
-      max-width: 800px;
-      margin-bottom: 20px;
     }
     #visualization {
       border: 1px solid #ddd;
       border-radius: 5px;
       overflow: auto;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       position: relative; /* For positioning the info panel */
-      min-height: 500px;  /* Minimum height for the visualization */
+      min-height: 100vh;  /* Minimum height relative to viewport */
       max-height: 100vh;   /* Maximum height relative to viewport */
     }
     .node {
@@ -35,7 +31,7 @@
       stroke: #ccc;
     }
     .time-axis text {
-      font-size: 11px; /* Slightly larger font size for better readability */
+      font-size: 12px; /* Slightly larger font size for better readability */
       fill: #333;      /* Darker text color for better contrast */
     }
     .phase-label {
@@ -57,7 +53,7 @@
       position: absolute;
       top: 20px;
       right: 20px;
-      width: 250px; /* Reduced width */
+      width: 275px; /* Reduced width */
       background-color: white;
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -113,8 +109,8 @@
   </style>
 </head>
 <body>
-  <h1>Data Surge Team Projects</h1>
-  
+  <h2>Data Surge Team Projects</h2> 
+  <p>Click a project to view additional information. Visualization created by Daina Bouquin.</p>
   <div id="visualization">
     <!-- Info panel will be added here dynamically -->
     <div id="info-panel">
