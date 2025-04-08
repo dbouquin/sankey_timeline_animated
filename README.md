@@ -76,6 +76,7 @@ To run this visualization:
 ## Dependencies
 
 - D3.js (version 6)
+- Node.js (for web server)
 
 ## Acknowledgements
 
