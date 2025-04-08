@@ -1,21 +1,18 @@
 # Timeline-Based Sankey Diagram
 
-This visualization displays projects on a timeline with Sankey-style flow connections between them. Projects are positioned horizontally based on their start and end dates, and vertically by their phase/category.
+This visualization displays projects on a timeline with Sankey-style flow connections between them. Projects are positioned horizontally based on their start and end dates.
 
 ## Key Features
 
 - Timeline-based layout: Projects are positioned horizontally based on their start/end dates
-- Phase organization: Projects are grouped vertically by phase
-- Animated connections: Hover over a project to see its connections animate
-- Intuitive data format: Projects and connections use IDs rather than array indices
+- Animated connections: Hover over or click on a project to see its connections animate
+- Intuitive data format: Projects and connections are structured in JSON
 
 ## File Structure
 
 - `timeline-sankey.js`: Main visualization code
 - `project-data.json`: JSON file containing project data
-- `index.js`: Entry point for the Observable notebook
-- `runtime.js` and `inspector.css`: Observable runtime files
-- `package.json`: Project metadata
+- `index.html`: Web page layout
 
 ## Data Format
 
@@ -23,27 +20,27 @@ The visualization reads from a JSON file named `project-data.json` with the foll
 
 ```json
 {
-  "projects": [
-    {
-      "id": "project-a",
-      "name": "Project A",
-      "startDate": "2023-01-01",
-      "endDate": "2023-03-15",
-      "duration": 73,
-      "category": "research",
-      "phase": 1
-    },
-    ...
-  ],
-  "connections": [
-    {
-      "source": "project-a",
-      "target": "project-b",
-      "value": 40
-    },
-    ...
-  ]
-}
+  "id": "project-1",
+  "name": "Project A",
+  "startDate": "2025-02-18",
+  "endDate": "2025-04-01",
+  "duration": "6 weeks",
+  "category": "M",
+  "phase": 1,
+  "description": "Text description",
+  "skills": ["Data Engineering", "ML", "Dashboard", "Database", "Cloud Architecture"]
+},
+{
+  "id": "project-2",
+  "name": "Project B",
+  "startDate": "2025-03-18",
+  "endDate": "2025-04-08",
+  "duration": "6.3 weeks",
+  "category": "M",
+  "phase": 1,
+  "description": "Text description",
+  "skills": ["Web Scraping"]
+},
 ```
 
 ### Project Properties
@@ -52,9 +49,11 @@ The visualization reads from a JSON file named `project-data.json` with the foll
 - `name`: Display name
 - `startDate`: Start date in YYYY-MM-DD format
 - `endDate`: End date in YYYY-MM-DD format
-- `duration`: Length of the project (typically in days)
-- `category`: Category/type of project (used for grouping or coloring)
-- `phase`: Numeric value representing the phase
+- `duration`: Length of the project in weeks
+- `category`: "T-Shit size" assigned to the project on Confluence
+- `phase`: Numeric value representing the number of project phases
+- `description`: Brief description pulled from the project "Goal" on Confluence
+- `skills`: Skills used to complete the project
 
 ### Connection Properties
 
