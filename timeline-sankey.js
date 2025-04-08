@@ -535,7 +535,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
           const outgoingHeader = document.createElement('div');
           outgoingHeader.textContent = 'Outgoing:';
           outgoingHeader.style.fontWeight = 'bold';
-          outgoingHeader.style.marginTop = '5px';
+          outgoingHeader.style.marginTop = '15px';
           connectionsElement.appendChild(outgoingHeader);
           
           const outgoingList = document.createElement('ul');
