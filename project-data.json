@@ -8,7 +8,7 @@
       "duration": "31.4 weeks",
       "category": "L",
       "phase": 1,
-      "description": "Test"
+      "description": "Automate Program Information Report processing pipeline to create an analysis-ready longitudinal dataset from at least 2007 onward"
     },
     {
       "id": "project-2",
@@ -18,7 +18,7 @@
       "duration": "12.6 weeks",
       "category": "XL",
       "phase": 1,
-      "description": "Test"
+      "description": "Categorize by topic and sentiment and summarize public comments on new proposed rule to enable OHS content team to formulate informed responses to the ruling"
     },
     {
       "id": "project-3",
@@ -28,7 +28,7 @@
       "duration": "31.4 weeks",
       "category": "XS",
       "phase": 1,
-      "description": "Test"
+      "description": ""
     },
     {
       "id": "project-4",

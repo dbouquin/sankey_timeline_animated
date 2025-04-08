@@ -500,7 +500,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
       document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
-      document.getElementById('node-description').textContent = node.description;
+      document.getElementById('node-description').textContent = `${node.description || 'No description available'}`;
       
       // Show connections information
       const connectionsElement = document.getElementById('node-connections');
@@ -727,7 +727,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       document.getElementById('node-duration').textContent = node.duration;
       document.getElementById('node-category').textContent = node.category;
       document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
-      document.getElementById('node-description').textContent = node.description;
+      document.getElementById('node-description').textContent = `${node.description || 'No description available'}`;
       
       // Show connections information
       const connectionsElement = document.getElementById('node-connections');
