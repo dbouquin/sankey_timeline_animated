@@ -261,7 +261,7 @@
       "duration": "Ongoing",
       "category": "L",
       "phase": 1,
-      "description": "To have the ability to conduct real testing in non-production environments.  Identify the databases, tables, fields to be de-identify and replace with synthetic data. Perform an automated or programmatic means to replace, containerize, and tag the actual data fields with the synthetic data. Create and maintain iterations of the synthetic data thus allows other database teams and vendors to have the look and feel of the production database for their development and testing needs. ",
+      "description": "Perform an automated or programmatic means to replace, containerize, and tag the actual data fields with the synthetic data.",
       "skills": ["Data Engineering", "Database"]
     },
     {

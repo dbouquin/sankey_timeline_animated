@@ -1,4 +1,54 @@
-// Load project data from a local file
+// Initialize the visualization once the page has loaded
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    // Constants
+    const width = window.innerWidth - 20;
+    // Adjust height based on viewport size 
+    const height = Math.max(600, window.innerHeight - 250); // Reduced from 650
+    const margin = {
+      top: 30,
+      right: 350, // Increased right margin to make room for the info panel
+      bottom: 50, 
+      left: 100    // Increased left margin to make room for project labels
+    };
+    const duration = 500;
+    
+    // Load D3.js
+    const d3 = await import('https://cdn.jsdelivr.net/npm/d3@6/+esm');
+    
+    // Load data
+    const projectData = await loadProjectData();
+    
+    // Process data
+    const graph = processData(projectData, d3);
+    
+    // Calculate dynamic sizing based on dataset size
+    const totalNodes = graph.nodes.length;
+    const dynamicHeight = Math.max(height, 150 + (totalNodes * 40)); 
+    
+    // Create time scale
+    const timeScale = createTimeScale(d3, graph, width, margin);
+    
+    // Create layout
+    const layout = createLayout(timeScale, dynamicHeight, margin, totalNodes);
+    
+    // Apply layout to graph
+    const layoutedGraph = layout(graph);
+    
+    // Create visualization with dynamic height
+    const svg = createVisualization(d3, width, dynamicHeight, layoutedGraph, margin, timeScale, duration);
+    
+    // Add to the page
+    document.getElementById('visualization').appendChild(svg);
+    
+  } catch (error) {
+    console.error('Error initializing visualization:', error);
+    const errorElement = document.createElement('div');
+    errorElement.className = 'error';
+    errorElement.textContent = `Failed to initialize visualization: ${error.message}`;
+    document.getElementById('visualization').appendChild(errorElement);
+  }
+});// Load project data from a local file
 async function loadProjectData() {
   // Add a timestamp to prevent caching
   const timestamp = new Date().getTime();
@@ -72,7 +122,7 @@ function createLayout(timeScale, height, margin, totalNodes) {
     
     // Add space for padding between nodes
     const totalVerticalSpace = totalNodeSpace + (nodeCount - 1) * nodePadding;
-    const startY = (maxHeight - totalVerticalSpace) / 50; // Change to 2 to center the nodes vertically
+    const startY = (maxHeight - totalVerticalSpace) / 50; // Change to center the nodes vertically
     
     // Position nodes
     let currentY = startY;
@@ -100,11 +150,6 @@ function createLayout(timeScale, height, margin, totalNodes) {
     
     return graph;
   };
-}
-
-// Format function for tooltips
-function formatDuration(value) {
-  return "Duration: " + value + " days";
 }
 
 // Process the data to create the graph structure needed for visualization
@@ -203,139 +248,33 @@ function createTimeScale(d3, graph, width, margin) {
     .range([0, width - margin.left - margin.right]);
 }
 
-// Set up filter event handlers
-function setupFilterHandlers(graph, nodes, d3) {
-  const applyButton = document.getElementById('apply-filters');
-  const clearButton = document.getElementById('clear-filters');
-  
-  if (!applyButton || !clearButton) return;
-  
-  applyButton.addEventListener('click', () => {
-    const selectedSkills = getSelectedSkills();
-    applySkillsFilter(selectedSkills, graph, nodes, d3);
-  });
-  
-  clearButton.addEventListener('click', () => {
-    clearSkillsFilter(graph, nodes, d3);
-  });
-}
-
-// Get selected skills from checkboxes
-function getSelectedSkills() {
-  const checkboxes = document.querySelectorAll('#skills-filter-container input[type="checkbox"]:checked');
-  return Array.from(checkboxes).map(checkbox => checkbox.value);
-}
-
-// Apply filter based on selected skills
-function applySkillsFilter(selectedSkills, graph, nodes, d3) {
-  if (selectedSkills.length === 0) {
-    // If no skills selected, reset all nodes
-    clearSkillsFilter(graph, nodes, d3);
-    return;
-  }
-  
-  // First, dim all nodes
-  nodes
-    .transition()
-    .duration(200)
-    .attr("opacity", 0.2)
-    .attr("stroke-width", 0.5);
-  
-  // Highlight nodes that match at least one of the selected skills
-  const matchingNodes = nodes.filter(d => {
-    if (!d.skills || !Array.isArray(d.skills)) return false;
-    return d.skills.some(skill => selectedSkills.includes(skill));
-  });
-  
-  matchingNodes
-    .transition()
-    .duration(200)
-    .attr("opacity", 1)
-    .attr("stroke-width", 2);
-  
-  // Also highlight labels of matching nodes
-  d3.selectAll("text.node-label")
-    .transition()
-    .duration(200)
-    .attr("opacity", function(d) {
-      if (!d.skills || !Array.isArray(d.skills)) return 0.2;
-      return d.skills.some(skill => selectedSkills.includes(skill)) ? 1 : 0.2;
-    })
-    .attr("font-weight", function(d) {
-      if (!d.skills || !Array.isArray(d.skills)) return "normal";
-      return d.skills.some(skill => selectedSkills.includes(skill)) ? "bold" : "normal";
-    });
-  
-  // And connector lines
-  d3.selectAll("line.node-label-connector")
-    .transition()
-    .duration(200)
-    .attr("opacity", function(d) {
-      if (!d.skills || !Array.isArray(d.skills)) return 0.2;
-      return d.skills.some(skill => selectedSkills.includes(skill)) ? 1 : 0.2;
-    })
-    .attr("stroke-width", function(d) {
-      if (!d.skills || !Array.isArray(d.skills)) return 0.5;
-      return d.skills.some(skill => selectedSkills.includes(skill)) ? 1 : 0.5;
-    });
-    
-  // Reset info panel if it's showing a non-matching node
-  const infoPanel = document.getElementById('info-panel');
-  if (infoPanel.style.display === 'block') {
-    const nodeName = document.getElementById('node-name').textContent;
-    const nodeId = document.getElementById('node-id').textContent;
-    const node = graph.nodes.find(n => n.id === nodeId);
-    
-    if (node && (!node.skills || !node.skills.some(skill => selectedSkills.includes(skill)))) {
-      infoPanel.style.display = 'none';
-    }
-  }
-}
-
-// Clear all filtering, reset to original state
-function clearSkillsFilter(graph, nodes, d3) {
-  // Uncheck all checkboxes
-  document.querySelectorAll('#skills-filter-container input[type="checkbox"]')
-    .forEach(checkbox => checkbox.checked = false);
-  
-  // Reset all nodes
-  nodes
-    .transition()
-    .duration(200)
-    .attr("opacity", 0.9)
-    .attr("stroke-width", 1);
-  
-  // Reset all labels
-  d3.selectAll("text.node-label")
-    .transition()
-    .duration(200)
-    .attr("opacity", 1)
-    .attr("font-weight", "normal");
-  
-  // Reset all connector lines
-  d3.selectAll("line.node-label-connector")
-    .transition()
-    .duration(200)
-    .attr("opacity", 1)
-    .attr("stroke-width", 0.5);
-  
-  // Reset all gradients
-  d3.selectAll("linearGradient.node-gradient")
-    .selectAll("stop")
-    .transition()
-    .duration(200)
-    .attr("offset", function(d, i) {
-      return i === 0 ? "0%" : "100%";
-    });
-}
-
 // Create the SVG visualization
 function createVisualization(d3, width, height, graph, margin, timeScale, duration) {
-  // Store d3 instance for filter functions
-  window.d3 = d3;
-  const arrow = "→"; // Unicode arrow for link tooltips
-  let selectedNode = null; // Track the currently selected node
-  const dateFormat = d3.timeFormat("%b %d, %Y"); // Format for displaying dates
+  // Store application state
+  let state = {
+    selectedNode: null,
+    filteredSkills: [],
+    visibleNodes: new Set(graph.nodes.map(n => n.id)),
+    
+    isNodeVisible: function(node) {
+      return this.visibleNodes.has(node.id);
+    },
+    
+    updateVisibleNodes: function() {
+      if (this.filteredSkills.length === 0) {
+        this.visibleNodes = new Set(graph.nodes.map(n => n.id));
+      } else {
+        this.visibleNodes = new Set(
+          graph.nodes
+            .filter(node => 
+              node.skills && 
+              node.skills.some(skill => this.filteredSkills.includes(skill))
+            )
+            .map(n => n.id)
+        );
+      }
+    }
+  };
   
   const svg = d3.create("svg")
     .attr("width", width)
@@ -379,6 +318,32 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     gradients.append("stop").attr("offset", 1.0).attr("stop-color", d => d.target.color);
   }
     
+  // Add a background rect to catch clicks on empty space
+  const background = svg.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "transparent")
+    .on("click", function() {
+      // Only handle background clicks, not clicks on nodes
+      if (state.selectedNode) {
+        // Reset all nodes that were part of the animation chain
+        if (window.animatedNodes) {
+          window.animatedNodes.forEach(nodeId => {
+            const animatedNode = graph.nodes.find(n => n.id === nodeId);
+            if (animatedNode) {
+              resetNode(animatedNode);
+            }
+          });
+        }
+        
+        // Reset the selected node
+        resetNode(state.selectedNode);
+        resetLinks();
+        hideInfoPanel();
+        state.selectedNode = null;
+      }
+    });
+
   // Add a g.view for holding the diagram
   const view = svg.append("g")
     .classed("view", true)
@@ -425,6 +390,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .data(graph.nodes)
     .join("text")
     .classed("node-label", true)
+    .attr("id", d => `node-label-${d.id}`)
     .attr("x", d => d.x0 - 5) // Position just to the left of the node
     .attr("y", d => (d.y0 + d.y1) / 2)
     .attr("dy", "0.35em")
@@ -439,6 +405,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .data(graph.nodes)
     .join("line")
     .classed("node-label-connector", true)
+    .attr("id", d => `node-connector-${d.id}`)
     .attr("x1", d => d.x0 - 3)
     .attr("y1", d => (d.y0 + d.y1) / 2)
     .attr("x2", d => d.x0)
@@ -448,7 +415,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .attr("stroke-dasharray", "2,2");
   
   // Only create links if there are any connections
-  let gradientLinks = null; // Make sure gradientLinks is defined in this scope
+  let gradientLinks = null;
   let setDash; // Declare setDash in the current scope so it's accessible
   
   if (graph.links.length > 0) {
@@ -484,7 +451,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     
     // Add <title> hover effect on links
     links.append("title").text(d => 
-      `${d.source.name} ${arrow} ${d.target.name}`);
+      `${d.source.name} → ${d.target.name}`);
       
     // Define the dash behavior for colored gradients
     setDash = function(link) {
@@ -507,600 +474,452 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       .attr("stroke-width", d => Math.max(1, d.width))
       .attr("fill", "none")
       .each(setDash);
+  }
+  
+  // Node highlighting function
+  function highlightNode(node) {
+    if (!state.isNodeVisible(node)) return;
     
-    // Animation functions for when a node is hovered
-    function branchAnimate(event, node) {
-      // Skip if this is triggered by a mouseout of a selected node
-      if (selectedNode === node && event && event.type === 'mouseout') {
-        return;
-      }
+    d3.select(`#node-${node.id}`)
+      .transition()
+      .duration(200)
+      .attr("opacity", 1)
+      .attr("stroke-width", 2);
+    
+    // Also highlight the label
+    d3.select(`#node-label-${node.id}`)
+      .transition()
+      .duration(200)
+      .attr("font-weight", "bold")
+      .attr("fill", "#000");
       
-      // Highlight the node being hovered
-      d3.select(`#node-${node.id}`)
-        .transition()
-        .duration(200)
-        .attr("opacity", 1)
-        .attr("stroke-width", 2);
+    // Highlight the connector line
+    d3.select(`#node-connector-${node.id}`)
+      .transition()
+      .duration(200)
+      .attr("stroke", "#999")
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "none");
+    
+    // Animate the node gradient
+    defs.select(`#node-gradient-${node.id}`)
+      .selectAll("stop")
+      .transition()
+      .duration(duration)
+      .attr("offset", function(d, i) {
+        return i === 0 ? "100%" : "100%";  // Both stops move to 100%
+      });
+  }
+  
+  // Reset node appearance
+  function resetNode(node) {
+    d3.select(`#node-${node.id}`)
+      .transition()
+      .duration(200)
+      .attr("opacity", state.isNodeVisible(node) ? 0.9 : 0.2)
+      .attr("stroke-width", 1);
+    
+    // Reset label
+    d3.select(`#node-label-${node.id}`)
+      .transition()
+      .duration(200)
+      .attr("font-weight", "normal")
+      .attr("fill", "#333")
+      .attr("opacity", state.isNodeVisible(node) ? 1 : 0.2);
       
-      // Also highlight the label
-      d3.selectAll("text.node-label")
-        .filter(d => d.id === node.id)
-        .transition()
-        .duration(200)
-        .attr("font-weight", "bold")
-        .attr("fill", "#000");
-        
-      // Highlight the connector line
-      d3.selectAll("line.node-label-connector")
-        .filter(d => d.id === node.id)
-        .transition()
-        .duration(200)
-        .attr("stroke", "#999")
-        .attr("stroke-width", 1)
-        .attr("stroke-dasharray", "none");
+    // Reset connector line
+    d3.select(`#node-connector-${node.id}`)
+      .transition()
+      .duration(200)
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 0.5)
+      .attr("stroke-dasharray", "2,2")
+      .attr("opacity", state.isNodeVisible(node) ? 1 : 0.2);
+    
+    // Reset gradient
+    defs.select(`#node-gradient-${node.id}`)
+      .selectAll("stop")
+      .transition()
+      .duration(200)
+      .attr("offset", function(d, i) {
+        return i === 0 ? "0%" : "100%";  // Reset to original positions
+      });
+  }
+  
+  // Reset all nodes
+  function resetAllNodes() {
+    nodes
+      .transition()
+      .duration(200)
+      .attr("opacity", d => state.isNodeVisible(d) ? 0.9 : 0.2)
+      .attr("stroke-width", 1);
+    
+    // Reset all labels
+    d3.selectAll("text.node-label")
+      .transition()
+      .duration(200)
+      .attr("font-weight", "normal")
+      .attr("fill", "#333")
+      .attr("opacity", d => state.isNodeVisible(d) ? 1 : 0.2);
       
-      // Animate the node gradient first
-      defs.select(`#node-gradient-${node.id}`)
-        .selectAll("stop")
+    // Reset all connector lines
+    d3.selectAll("line.node-label-connector")
+      .transition()
+      .duration(200)
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 0.5)
+      .attr("stroke-dasharray", "2,2")
+      .attr("opacity", d => state.isNodeVisible(d) ? 1 : 0.2);
+    
+    // Reset all gradients
+    defs.selectAll("linearGradient.node-gradient")
+      .selectAll("stop")
+      .transition()
+      .duration(200)
+      .attr("offset", function(d, i) {
+        return i === 0 ? "0%" : "100%";
+      });
+      
+    // Reset links
+    resetLinks();
+  }
+  
+  // Link animation function
+  function animateLinksFromNode(node, depth = 0) {
+    // Limit recursion depth for safety
+    if (depth > 10) return;
+    
+    if (!state.isNodeVisible(node) || !node.sourceLinks || node.sourceLinks.length === 0) {
+      return;
+    }
+    
+    // Find visible outgoing links
+    let visibleLinks = node.sourceLinks.filter(link => state.isNodeVisible(link.target));
+    
+    if (visibleLinks.length === 0) return;
+    
+    // Keep track of all nodes in the animation chain
+    if (!window.animatedNodes) {
+      window.animatedNodes = new Set();
+    }
+    window.animatedNodes.add(node.id);
+    
+    // For each visible link, animate it
+    visibleLinks.forEach(link => {
+      // Add target node to the animated set
+      window.animatedNodes.add(link.target.id);
+      
+      // Animate the link
+      view.select(`#${link.path}`)
+        .attr("stroke-opacity", 0.8)
         .transition()
         .duration(duration)
-        .attr("offset", function(d, i) {
-          return i === 0 ? "100%" : "100%";  // Both stops move to 100%
-        })
-        // Only animate links AFTER node animation completes
+        .ease(d3.easeLinear)
+        .attr("stroke-dashoffset", 0)
         .on("end", () => {
-          // Only animate if the node has outgoing links
-          if (node.sourceLinks && node.sourceLinks.length > 0) {
-            // Find all outgoing links from this node
-            let links = view.selectAll("path.gradient-link")
-              .filter((link) => {
-                return node.sourceLinks.indexOf(link) !== -1;
-              });
+          if (state.selectedNode) {
+            // Highlight the target node
+            highlightNode(link.target);
             
-            // Track the nodes that these links connect to
-            let nextNodes = [];
-            links.each((link) => {
-              nextNodes.push(link.target);
-            });
-            
-            // Animate the gradient along the path
-            links.attr("stroke-opacity", 0.8)
-              .transition()
-              .duration(duration)
-              .ease(d3.easeLinear)
-              .attr("stroke-dashoffset", 0)
-              .on("end", () => {
-                // Recursively animate connected nodes (but not if we're deselecting)
-                if (selectedNode !== null || event.type !== 'click') {
-                  nextNodes.forEach((nextNode) => {
-                    branchAnimate.call(null, event, nextNode);
-                  });
-                }
-              });
+            // Continue the animation chain if the target has outgoing links
+            // Use setTimeout to create a slight delay between levels
+            setTimeout(() => {
+              // Continue animation with the next node in the chain
+              animateLinksFromNode(link.target, depth + 1);
+            }, 200);
           }
         });
-    }
-    
-    // Reset animation when mouse leaves a node
-    function branchClear() {
-      // Don't clear if there's a selected node
-      if (selectedNode !== null) {
-        return;
-      }
-      
-      // Reset node appearance and gradients
-      nodes.transition()
-        .duration(200)
-        .attr("opacity", 0.9)
-        .attr("stroke-width", 1);
-      
-      // Reset labels
-      d3.selectAll("text.node-label")
-        .transition()
-        .duration(200)
-        .attr("font-weight", "normal")
-        .attr("fill", "#333");
-        
-      // Reset connector lines
-      d3.selectAll("line.node-label-connector")
-        .transition()
-        .duration(200)
-        .attr("stroke", "#ccc")
-        .attr("stroke-width", 0.5)
-        .attr("stroke-dasharray", "2,2");
-      
-      // Reset all node gradients
-      defs.selectAll("linearGradient.node-gradient")
-        .selectAll("stop")
-        .transition()
-        .duration(200)
-        .attr("offset", function(d, i) {
-          return i === 0 ? "0%" : "100%";  // Reset to original positions
-        });
-      
-      // Stop and reset all gradient animations for links
-      if (gradientLinks && gradientLinks.size() > 0) {
-        gradientLinks.transition();
-        gradientLinks.attr("stroke-opacity", 0)
-          .each(setDash); // setDash is defined in the same scope
-      }
-    }
-    
-    // Handle node click events
-    function handleNodeClick(event, node) {
-      event.stopPropagation(); // Prevent clicks from bubbling to the SVG
-      
-      if (selectedNode === node) {
-        // If clicking the same node again, deselect it
-        selectedNode = null;
-        branchClear();
-        hideInfoPanel();
-      } else {
-        // First, clear any existing animations
-        branchClear();
-        
-        // Set this as the selected node
-        selectedNode = node;
-        
-        // Trigger the animation for this node
-        branchAnimate.call(this, event, node);
-        
-        // Show info panel for this node
-        showInfoPanel(node, d3);
-      }
-    }
-    
-    // Show the information panel with node details
-    function showInfoPanel(node, d3) {
-      // Get the panel
-      const panel = document.getElementById('info-panel');
-      
-      // Set node color indicator
-      const colorIndicator = panel.querySelector('.node-color-indicator');
-      colorIndicator.style.backgroundColor = node.color;
-      
-      // Populate the panel with node information
-      document.getElementById('node-name').textContent = node.name;
-      document.getElementById('node-id').textContent = node.id;
-      document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
-      document.getElementById('node-end-date').textContent = node.hasDefinedEndDate ? dateFormat(node.endDate) : "-";
-      document.getElementById('node-duration').textContent = node.duration;
-      document.getElementById('node-category').textContent = node.category;
-      document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
-
-      // Add this block to display skills as tags
-      const skillsElement = document.getElementById('node-skills');
-      skillsElement.innerHTML = '';
-
-      if (node.skills && node.skills.length > 0) {
-        node.skills.forEach(skill => {
-          const skillTag = document.createElement('span');
-          skillTag.className = 'skill-tag';
-          skillTag.textContent = skill;
-          skillsElement.appendChild(skillTag);
-        });
-      } else {
-        skillsElement.textContent = 'None specified';
-      }
-
-      // Format description text with better handling for longer content
-      const descriptionElement = document.getElementById('node-description');
-      descriptionElement.textContent = node.description || 'No description available';
-      
-      // Show connections information
-      const connectionsElement = document.getElementById('node-connections');
-      connectionsElement.innerHTML = '';
-      
-      if (node.sourceLinks.length === 0 && node.targetLinks.length === 0) {
-        connectionsElement.textContent = 'None';
-      } else {
-        // Create a list of incoming connections
-        if (node.targetLinks.length > 0) {
-          const incomingHeader = document.createElement('div');
-          incomingHeader.textContent = 'Incoming:';
-          incomingHeader.style.fontWeight = 'bold';
-          incomingHeader.style.marginTop = '15px';
-          connectionsElement.appendChild(incomingHeader);
-          
-          const incomingList = document.createElement('ul');
-          incomingList.style.marginTop = '3px';
-          incomingList.style.paddingLeft = '15px';
-          incomingList.style.marginBottom = '3px';
-          
-          node.targetLinks.forEach(link => {
-            const item = document.createElement('li');
-            item.textContent = `${link.source.name}`;
-            item.style.marginBottom = '2px';
-            incomingList.appendChild(item);
-          });
-          
-          connectionsElement.appendChild(incomingList);
-        }
-        
-        // Create a list of outgoing connections
-        if (node.sourceLinks.length > 0) {
-          const outgoingHeader = document.createElement('div');
-          outgoingHeader.textContent = 'Outgoing:';
-          outgoingHeader.style.fontWeight = 'bold';
-          outgoingHeader.style.marginTop = '15px';
-          connectionsElement.appendChild(outgoingHeader);
-          
-          const outgoingList = document.createElement('ul');
-          outgoingList.style.marginTop = '3px';
-          outgoingList.style.paddingLeft = '15px';
-          outgoingList.style.marginBottom = '0';
-          
-          node.sourceLinks.forEach(link => {
-            const item = document.createElement('li');
-            item.textContent = `${link.target.name}`;
-            item.style.marginBottom = '2px';
-            outgoingList.appendChild(item);
-          });
-          
-          connectionsElement.appendChild(outgoingList);
-        }
-      }
-      
-      // Show the panel
-      panel.style.display = 'block';
-      
-      // Set up the close button
-      const closeButton = panel.querySelector('.close-button');
-      closeButton.onclick = function() {
-        hideInfoPanel();
-        // Also deselect the node if the panel is closed
-        if (selectedNode !== null) {
-          const nodeToDeselect = selectedNode;
-          selectedNode = null;
-          branchClear();
-          
-          // Reset the specific node that was selected
-          d3.select(`#node-${nodeToDeselect.id}`)
-            .transition()
-            .duration(200)
-            .attr("opacity", 0.9)
-            .attr("stroke-width", 1);
-          
-          defs.select(`#node-gradient-${nodeToDeselect.id}`)
-            .selectAll("stop")
-            .transition()
-            .duration(200)
-            .attr("offset", function(d, i) {
-              return i === 0 ? "0%" : "100%";
-            });
-        }
-      };
-    }
-    
-    // Hide the information panel
-    function hideInfoPanel() {
-      const panel = document.getElementById('info-panel');
-      panel.style.display = 'none';
-    }
-    
-    // Clear selection when clicking on empty space
-    svg.on("click", () => {
-      if (selectedNode !== null) {
-        selectedNode = null;
-        branchClear();
-        hideInfoPanel();
-      }
-    });
-
-    // Add mouse interaction
-    nodes.on("mouseover", function(event, node) {
-      branchAnimate.call(this, event, node);
-    })
-      .on("mouseout", branchClear)
-      .on("click", handleNodeClick);
-  } else {
-    // If there are no links, still add hover effect to nodes with similar animation
-    nodes.on("mouseover", function(event, node) {
-      // Skip if this is already the selected node
-      if (selectedNode === node) return;
-      
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .attr("opacity", 1)
-        .attr("stroke-width", 2);
-      
-      // Animate the node gradient
-      defs.select(`#node-gradient-${node.id}`)
-        .selectAll("stop")
-        .transition()
-        .duration(duration)
-        .attr("offset", function(d, i) {
-          return i === 0 ? "100%" : "100%";  // Both stops move to 100%
-        });
-    })
-    .on("mouseout", function(event, node) {
-      // Don't reset if this is the selected node
-      if (selectedNode === node) return;
-      
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .attr("opacity", 0.9)
-        .attr("stroke-width", 1);
-      
-      // Reset the node gradient
-      defs.select(`#node-gradient-${node.id}`)
-        .selectAll("stop")
-        .transition()
-        .duration(200)
-        .attr("offset", function(d, i) {
-          return i === 0 ? "0%" : "100%";  // Reset to original positions
-        });
-    })
-    .on("click", function(event, node) {
-      event.stopPropagation();
-      
-      if (selectedNode === node) {
-        // Deselect if clicking the same node
-        selectedNode = null;
-        
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .attr("opacity", 0.9)
-          .attr("stroke-width", 1);
-        
-        defs.select(`#node-gradient-${node.id}`)
-          .selectAll("stop")
-          .transition()
-          .duration(200)
-          .attr("offset", function(d, i) {
-            return i === 0 ? "0%" : "100%";  // Reset to original positions
-          });
-          
-        hideInfoPanel();
-      } else {
-        // First reset any previously selected node
-        if (selectedNode !== null) {
-          d3.select(`#node-${selectedNode.id}`)
-            .transition()
-            .duration(200)
-            .attr("opacity", 0.9)
-            .attr("stroke-width", 1);
-          
-          defs.select(`#node-gradient-${selectedNode.id}`)
-            .selectAll("stop")
-            .transition()
-            .duration(200)
-            .attr("offset", function(d, i) {
-              return i === 0 ? "0%" : "100%";  // Reset to original positions
-            });
-        }
-        
-        // Select this node
-        selectedNode = node;
-        
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .attr("opacity", 1)
-          .attr("stroke-width", 2);
-        
-        defs.select(`#node-gradient-${node.id}`)
-          .selectAll("stop")
-          .transition()
-          .duration(duration)
-          .attr("offset", function(d, i) {
-            return i === 0 ? "100%" : "100%";  // Both stops move to 100%
-          });
-          
-        // Show info panel for this node
-        showInfoPanel(node, d3);
-      }
-    });
-    
-    // Show the information panel with node details
-    function showInfoPanel(node, d3) {
-      // Get the panel
-      const panel = document.getElementById('info-panel');
-      
-      // Set node color indicator
-      const colorIndicator = panel.querySelector('.node-color-indicator');
-      colorIndicator.style.backgroundColor = node.color;
-      
-      // Populate the panel with node information
-      document.getElementById('node-name').textContent = node.name;
-      document.getElementById('node-id').textContent = node.id;
-      document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
-      document.getElementById('node-end-date').textContent = node.hasDefinedEndDate ? dateFormat(node.endDate) : "-";
-      document.getElementById('node-duration').textContent = node.duration;
-      document.getElementById('node-category').textContent = node.category;
-      document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
-
-      // Add this block to display skills as tags
-      const skillsElement = document.getElementById('node-skills');
-      skillsElement.innerHTML = '';
-
-      if (node.skills && node.skills.length > 0) {
-        node.skills.forEach(skill => {
-          const skillTag = document.createElement('span');
-          skillTag.className = 'skill-tag';
-          skillTag.textContent = skill;
-          skillsElement.appendChild(skillTag);
-        });
-      } else {
-        skillsElement.textContent = 'None specified';
-      }
-
-      // Format description text with better handling for longer content
-      const descriptionElement = document.getElementById('node-description');
-      descriptionElement.textContent = node.description || 'No description available';
-      
-      // Show connections information
-      const connectionsElement = document.getElementById('node-connections');
-      connectionsElement.innerHTML = '';
-      
-      if (node.sourceLinks.length === 0 && node.targetLinks.length === 0) {
-        connectionsElement.textContent = 'None';
-      } else {
-        // Create a list of incoming connections
-        if (node.targetLinks.length > 0) {
-          const incomingHeader = document.createElement('div');
-          incomingHeader.textContent = 'Incoming:';
-          incomingHeader.style.fontWeight = 'bold';
-          incomingHeader.style.marginTop = '5px';
-          connectionsElement.appendChild(incomingHeader);
-          
-          const incomingList = document.createElement('ul');
-          incomingList.style.marginTop = '5px';
-          incomingList.style.paddingLeft = '20px';
-          
-          node.targetLinks.forEach(link => {
-            const item = document.createElement('li');
-            item.textContent = `${link.source.name}`;
-            incomingList.appendChild(item);
-          });
-          
-          connectionsElement.appendChild(incomingList);
-        }
-        
-        // Create a list of outgoing connections
-        if (node.sourceLinks.length > 0) {
-          const outgoingHeader = document.createElement('div');
-          outgoingHeader.textContent = 'Outgoing:';
-          outgoingHeader.style.fontWeight = 'bold';
-          outgoingHeader.style.marginTop = '10px';
-          connectionsElement.appendChild(outgoingHeader);
-          
-          const outgoingList = document.createElement('ul');
-          outgoingList.style.marginTop = '5px';
-          outgoingList.style.paddingLeft = '20px';
-          
-          node.sourceLinks.forEach(link => {
-            const item = document.createElement('li');
-            item.textContent = `${link.target.name}`;
-            outgoingList.appendChild(item);
-          });
-          
-          connectionsElement.appendChild(outgoingList);
-        }
-      }
-      
-      // Show the panel
-      panel.style.display = 'block';
-      
-      // Set up the close button
-      const closeButton = panel.querySelector('.close-button');
-      closeButton.onclick = function() {
-        hideInfoPanel();
-        // Also deselect the node if the panel is closed
-        if (selectedNode !== null) {
-          const nodeToDeselect = selectedNode;
-          selectedNode = null;
-          
-          // Reset the specific node that was selected
-          d3.select(`#node-${nodeToDeselect.id}`)
-            .transition()
-            .duration(200)
-            .attr("opacity", 0.9)
-            .attr("stroke-width", 1);
-          
-          defs.select(`#node-gradient-${nodeToDeselect.id}`)
-            .selectAll("stop")
-            .transition()
-            .duration(200)
-            .attr("offset", function(d, i) {
-              return i === 0 ? "0%" : "100%";
-            });
-        }
-      };
-    }
-    
-    // Hide the information panel
-    function hideInfoPanel() {
-      const panel = document.getElementById('info-panel');
-      panel.style.display = 'none';
-    }
-    
-    // Clear selection when clicking on empty space
-    svg.on("click", () => {
-      if (selectedNode !== null) {
-        const node = selectedNode;
-        selectedNode = null;
-        
-        d3.select(`#node-${node.id}`)
-          .transition()
-          .duration(200)
-          .attr("opacity", 0.9)
-          .attr("stroke-width", 1);
-        
-        defs.select(`#node-gradient-${node.id}`)
-          .selectAll("stop")
-          .transition()
-          .duration(200)
-          .attr("offset", function(d, i) {
-            return i === 0 ? "0%" : "100%";  // Reset to original positions
-          });
-          
-        hideInfoPanel();
-      }
     });
   }
   
+  // Reset all links
+  function resetLinks() {
+    if (!gradientLinks) return;
+    
+    gradientLinks
+      .interrupt() // Stop any ongoing transitions
+      .attr("stroke-opacity", 0)
+      .each(setDash);
+      
+    // Clear the set of animated nodes
+    window.animatedNodes = new Set();
+  }
+  
+  // Show the information panel with node details
+  function showInfoPanel(node) {
+    const dateFormat = d3.timeFormat("%b %d, %Y");
+    
+    // Get the panel
+    const panel = document.getElementById('info-panel');
+    
+    // Set node color indicator
+    const colorIndicator = panel.querySelector('.node-color-indicator');
+    colorIndicator.style.backgroundColor = node.color;
+    
+    // Populate the panel with node information
+    document.getElementById('node-name').textContent = node.name;
+    document.getElementById('node-id').textContent = node.id;
+    document.getElementById('node-start-date').textContent = dateFormat(node.startDate);
+    document.getElementById('node-end-date').textContent = node.hasDefinedEndDate ? dateFormat(node.endDate) : "-";
+    document.getElementById('node-duration').textContent = node.duration;
+    document.getElementById('node-category').textContent = node.category;
+    document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
+
+    // Add this block to display skills as tags
+    const skillsElement = document.getElementById('node-skills');
+    skillsElement.innerHTML = '';
+
+    if (node.skills && node.skills.length > 0) {
+      node.skills.forEach(skill => {
+        const skillTag = document.createElement('span');
+        skillTag.className = 'skill-tag';
+        skillTag.textContent = skill;
+        skillsElement.appendChild(skillTag);
+      });
+    } else {
+      skillsElement.textContent = 'None specified';
+    }
+
+    // Format description text with better handling for longer content
+    const descriptionElement = document.getElementById('node-description');
+    descriptionElement.textContent = node.description || 'No description available';
+    
+    // Show connections information
+    const connectionsElement = document.getElementById('node-connections');
+    connectionsElement.innerHTML = '';
+    
+    if (node.sourceLinks.length === 0 && node.targetLinks.length === 0) {
+      connectionsElement.textContent = 'None';
+    } else {
+      // Create a list of incoming connections
+      if (node.targetLinks.length > 0) {
+        const incomingHeader = document.createElement('div');
+        incomingHeader.textContent = 'Incoming:';
+        incomingHeader.style.fontWeight = 'bold';
+        incomingHeader.style.marginTop = '15px';
+        connectionsElement.appendChild(incomingHeader);
+        
+        const incomingList = document.createElement('ul');
+        incomingList.style.marginTop = '3px';
+        incomingList.style.paddingLeft = '15px';
+        incomingList.style.marginBottom = '3px';
+        
+        node.targetLinks.forEach(link => {
+          const item = document.createElement('li');
+          item.textContent = `${link.source.name}`;
+          item.style.marginBottom = '2px';
+          incomingList.appendChild(item);
+        });
+        
+        connectionsElement.appendChild(incomingList);
+      }
+      
+      // Create a list of outgoing connections
+      if (node.sourceLinks.length > 0) {
+        const outgoingHeader = document.createElement('div');
+        outgoingHeader.textContent = 'Outgoing:';
+        outgoingHeader.style.fontWeight = 'bold';
+        outgoingHeader.style.marginTop = '15px';
+        connectionsElement.appendChild(outgoingHeader);
+        
+        const outgoingList = document.createElement('ul');
+        outgoingList.style.marginTop = '3px';
+        outgoingList.style.paddingLeft = '15px';
+        outgoingList.style.marginBottom = '0';
+        
+        node.sourceLinks.forEach(link => {
+          const item = document.createElement('li');
+          item.textContent = `${link.target.name}`;
+          item.style.marginBottom = '2px';
+          outgoingList.appendChild(item);
+        });
+        
+        connectionsElement.appendChild(outgoingList);
+      }
+    }
+    
+    // Show the panel
+    panel.style.display = 'block';
+    
+    // Set up the close button
+    const closeButton = panel.querySelector('.close-button');
+    closeButton.onclick = function(event) {
+      event.stopPropagation();
+      hideInfoPanel();
+      
+      // Also deselect the node
+      if (state.selectedNode) {
+        resetNode(state.selectedNode);
+        resetLinks();
+        state.selectedNode = null;
+      }
+    };
+  }
+  
+  // Hide the information panel
+  function hideInfoPanel() {
+    const panel = document.getElementById('info-panel');
+    panel.style.display = 'none';
+  }
+  
+  // Handle node click
+  function handleNodeClick(event, node) {
+    event.stopPropagation();
+    
+    if (!state.isNodeVisible(node)) return;
+    
+    if (state.selectedNode === node) {
+      // Deselect if clicking the same node
+      state.selectedNode = null;
+      
+      // Reset all nodes that were part of the animation chain
+      if (window.animatedNodes) {
+        window.animatedNodes.forEach(nodeId => {
+          const animatedNode = graph.nodes.find(n => n.id === nodeId);
+          if (animatedNode) {
+            resetNode(animatedNode);
+          }
+        });
+      }
+      
+      resetNode(node);
+      resetLinks();
+      hideInfoPanel();
+    } else {
+      // If another node is selected, reset it and all connected nodes
+      if (state.selectedNode) {
+        // Reset all nodes that were part of the animation chain
+        if (window.animatedNodes) {
+          window.animatedNodes.forEach(nodeId => {
+            const animatedNode = graph.nodes.find(n => n.id === nodeId);
+            if (animatedNode) {
+              resetNode(animatedNode);
+            }
+          });
+        }
+        
+        resetNode(state.selectedNode);
+        resetLinks();
+      }
+      
+      // Select the clicked node
+      state.selectedNode = node;
+      highlightNode(node);
+      
+      // Wait for the gradient animation to finish, then animate links
+      setTimeout(() => {
+        animateLinksFromNode(node);
+      }, duration + 100);
+      
+      // Show info panel
+      showInfoPanel(node);
+    }
+  }
+  
+  // Handle node mouse over
+  function handleNodeMouseOver(event, node) {
+    if (!state.isNodeVisible(node) || state.selectedNode) return;
+    
+    highlightNode(node);
+  }
+  
+  // Handle node mouse out
+  function handleNodeMouseOut(event, node) {
+    if (!state.isNodeVisible(node) || state.selectedNode === node) return;
+    
+    resetNode(node);
+  }
+  
+  // Add mouse events to nodes
+  nodes
+    .on("mouseover", handleNodeMouseOver)
+    .on("mouseout", handleNodeMouseOut)
+    .on("click", handleNodeClick);
+  
+  // Filter functions
+  function applyFilter() {
+    const selectedSkills = getSelectedSkills();
+    
+    state.filteredSkills = selectedSkills;
+    state.updateVisibleNodes();
+    
+    // Update node visibility
+    nodes
+      .transition()
+      .duration(200)
+      .attr("opacity", d => state.isNodeVisible(d) ? 0.9 : 0.2)
+      .attr("stroke-width", d => state.isNodeVisible(d) ? 1 : 0.5);
+    
+    // Also update labels
+    d3.selectAll("text.node-label")
+      .transition()
+      .duration(200)
+      .attr("opacity", d => state.isNodeVisible(d) ? 1 : 0.2);
+    
+    // And connector lines
+    d3.selectAll("line.node-label-connector")
+      .transition()
+      .duration(200)
+      .attr("opacity", d => state.isNodeVisible(d) ? 1 : 0.2);
+    
+    // Update links if they exist
+    if (graph.links.length > 0) {
+      view.selectAll("path.link")
+        .transition()
+        .duration(200)
+        .attr("stroke-opacity", d => 
+          state.isNodeVisible(d.source) && state.isNodeVisible(d.target) ? 0.04 : 0.01);
+    }
+    
+    // If selected node is no longer visible, deselect it
+    if (state.selectedNode && !state.isNodeVisible(state.selectedNode)) {
+      resetNode(state.selectedNode);
+      resetLinks();
+      hideInfoPanel();
+      state.selectedNode = null;
+    }
+  }
+  
+  function clearFilter() {
+    // Uncheck all checkboxes
+    document.querySelectorAll('#skills-filter-container input[type="checkbox"]')
+      .forEach(checkbox => checkbox.checked = false);
+    
+    state.filteredSkills = [];
+    state.updateVisibleNodes();
+    
+    // Reset all nodes
+    resetAllNodes();
+    
+    // Reset any links
+    if (graph.links.length > 0) {
+      view.selectAll("path.link")
+        .transition()
+        .duration(200)
+        .attr("stroke-opacity", 0.04);
+    }
+  }
+  
+  function getSelectedSkills() {
+    const checkboxes = document.querySelectorAll('#skills-filter-container input[type="checkbox"]:checked');
+    return Array.from(checkboxes).map(checkbox => checkbox.value);
+  }
+  
+  // Set up filter handlers
+  const applyButton = document.getElementById('apply-filters');
+  const clearButton = document.getElementById('clear-filters');
+  
+  if (applyButton) {
+    applyButton.addEventListener('click', applyFilter);
+  }
+  
+  if (clearButton) {
+    clearButton.addEventListener('click', clearFilter);
+  }
+  
+  // Populate skills filter
+  const uniqueSkills = extractUniqueSkills(graph.nodes);
+  populateSkillsFilter(uniqueSkills);
+  
   return svg.node();
 }
-
-// Initialize the visualization once the page has loaded
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    // Constants
-    const width = window.innerWidth - 20;
-    // Adjust height based on viewport size 
-    const height = Math.max(600, window.innerHeight - 250); // Reduced from 650
-    const margin = {
-      top: 30,
-      right: 350, // Increased right margin to make room for the info panel
-      bottom: 50, 
-      left: 100    // Increased left margin to make room for project labels
-    };
-    const duration = 500;
-    
-    // Load D3.js
-    const d3 = await import('https://cdn.jsdelivr.net/npm/d3@6/+esm');
-    
-    // Load data
-    const projectData = await loadProjectData();
-
-    // Extract unique skills and populate filter
-    const uniqueSkills = extractUniqueSkills(projectData.projects);
-    populateSkillsFilter(uniqueSkills);
-    
-    // Process data
-    const graph = processData(projectData, d3);
-    
-    // Calculate dynamic sizing based on dataset size
-    const totalNodes = graph.nodes.length;
-    const dynamicHeight = Math.max(height, 150 + (totalNodes * 40)); 
-    
-    // Create time scale
-    const timeScale = createTimeScale(d3, graph, width, margin);
-    
-    // Create layout
-    const layout = createLayout(timeScale, dynamicHeight, margin, totalNodes);
-    
-    // Apply layout to graph
-    const layoutedGraph = layout(graph);
-    
-    // Create visualization with dynamic height
-    const svg = createVisualization(d3, width, dynamicHeight, layoutedGraph, margin, timeScale, duration);
-    
-    // Add to the page
-    document.getElementById('visualization').appendChild(svg);
-    
-    // Setup filter handlers AFTER visualization is created
-    setupFilterHandlers(layoutedGraph, d3.selectAll("rect.node"), d3);
-    
-  } catch (error) {
-    console.error('Error initializing visualization:', error);
-    const errorElement = document.createElement('div');
-    errorElement.className = 'error';
-    errorElement.textContent = `Failed to initialize visualization: ${error.message}`;
-    document.getElementById('visualization').appendChild(errorElement);
-  }
-});
