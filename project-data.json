@@ -324,37 +324,37 @@
     {
       "source": "project-1",
       "target": "project-27",
-      "value": 50
+      "value": 100
     },
     {
       "source": "project-7",
       "target": "project-20",
-      "value": 50
+      "value": 100
     },
     {
       "source": "project-18",
       "target": "project-23",
-      "value": 50
+      "value": 100
     },
     {
       "source": "project-23",
       "target": "project-24",
-      "value": 50
+      "value": 100
     },
     {
       "source": "project-23",
       "target": "project-25",
-      "value": 50
+      "value": 100
     },
     {
       "source": "project-24",
       "target": "project-29",
-      "value": 50
+      "value": 100
     },
     {
       "source": "project-25",
       "target": "project-29",
-      "value": 50
+      "value": 100
     }
   ]
 }
