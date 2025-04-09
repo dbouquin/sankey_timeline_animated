@@ -12,7 +12,63 @@
     h2 {
       color: #333;
     }
+    .container {
+      display: flex;
+      flex-direction: row;
+    }
+    #filter-panel {
+      width: 150px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin-right: 20px;
+      align-self: flex-start;
+      max-height: 80vh;
+      overflow-y: auto;
+      font-size: 12px; /* Smaller font size */
+    }
+    #filter-panel h3 {
+      margin-top: 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+      color: #333;
+      font-size: 14px; /* Smaller heading */
+    }
+    #skills-filter-container {
+      margin-bottom: 15px;
+    }
+    .skill-checkbox {
+      margin-bottom: 8px;
+      display: block;
+    }
+    .skill-checkbox input {
+      margin-right: 8px;
+    }
+    .filter-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    .filter-buttons button {
+      padding: 6px 10px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px; /* Smaller font size */
+    }
+    .filter-buttons button:hover {
+      background-color: #e0e0e0;
+    }
+    #apply-filters {
+      background-color: #4CAF50;
+      color: white;
+      border-color: #45a049;
+    }
+    #apply-filters:hover {
+      background-color: #45a049;
+    }
     #visualization {
+      flex: 1;
       border: 1px solid #ddd;
       border-radius: 5px;
       overflow: auto;
@@ -53,7 +109,7 @@
       position: absolute;
       top: 20px;
       right: 20px;
-      width: 275px; /* Reduced width */
+      width: 250px; /* Reduced width */
       background-color: white;
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -131,49 +187,61 @@
 </head>
 <body>
   <h2>Data Surge Team Projects</h2> 
-  <p>Click a project to view additional information. Visualization created by Daina Bouquin.</p>
-  <div id="visualization">
-    <!-- Info panel will be added here dynamically -->
-    <div id="info-panel">
-      <div class="panel-header">
-        <h3><span class="node-color-indicator"></span> <span id="node-name"></span></h3>
-        <span class="close-button">&times;</span>
+  <p>Click a project to view additional information. Use the filter panel to highlight projects by skills. Visualization created by Daina Bouquin.</p>
+  <div class="container">
+    <div id="filter-panel">
+      <h3>Filter by Skills</h3>
+      <div id="skills-filter-container">
+        <!-- Skills checkboxes will be added here dynamically -->
       </div>
-      <div class="info-row">
-        <div class="info-label">ID:</div>
-        <div class="info-value" id="node-id"></div>
+      <div class="filter-buttons">
+        <button id="apply-filters">Apply</button>
+        <button id="clear-filters">Clear</button>
       </div>
-      <div class="info-row">
-        <div class="info-label">Start Date:</div>
-        <div class="info-value" id="node-start-date"></div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">End Date:</div>
-        <div class="info-value" id="node-end-date"></div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Duration:</div>
-        <div class="info-value" id="node-duration"></div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Category:</div>
-        <div class="info-value" id="node-category"></div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Phases:</div>
-        <div class="info-value" id="node-phase"></div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Skills:</div>
-        <div class="info-value" id="node-skills"></div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Description:</div>
-        <div class="info-value" id="node-description"></div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Connections:</div>
-        <div class="info-value" id="node-connections"></div>
+    </div>
+    <div id="visualization">
+      <!-- Info panel will be added here dynamically -->
+      <div id="info-panel">
+        <div class="panel-header">
+          <h3><span class="node-color-indicator"></span> <span id="node-name"></span></h3>
+          <span class="close-button">&times;</span>
+        </div>
+        <div class="info-row">
+          <div class="info-label">ID:</div>
+          <div class="info-value" id="node-id"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Start Date:</div>
+          <div class="info-value" id="node-start-date"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">End Date:</div>
+          <div class="info-value" id="node-end-date"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Duration:</div>
+          <div class="info-value" id="node-duration"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Category:</div>
+          <div class="info-value" id="node-category"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Phases:</div>
+          <div class="info-value" id="node-phase"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Skills:</div>
+          <div class="info-value" id="node-skills"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Description:</div>
+          <div class="info-value" id="node-description"></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Connections:</div>
+          <div class="info-value" id="node-connections"></div>
+        </div>
       </div>
     </div>
   </div>

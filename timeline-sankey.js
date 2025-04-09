@@ -9,6 +9,39 @@ async function loadProjectData() {
   return response.json();
 }
 
+// Extract unique skills from project data
+function extractUniqueSkills(projects) {
+  const skillsSet = new Set();
+  
+  projects.forEach(project => {
+    if (project.skills && Array.isArray(project.skills)) {
+      project.skills.forEach(skill => skillsSet.add(skill));
+    }
+  });
+  
+  return Array.from(skillsSet).sort();
+}
+
+// Populate the skills filter panel
+function populateSkillsFilter(skills) {
+  const container = document.getElementById('skills-filter-container');
+  if (!container) return;
+  
+  skills.forEach(skill => {
+    const checkbox = document.createElement('label');
+    checkbox.className = 'skill-checkbox';
+    
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = skill;
+    input.id = `skill-${skill.replace(/\s+/g, '-').toLowerCase()}`;
+    
+    checkbox.appendChild(input);
+    checkbox.appendChild(document.createTextNode(skill));
+    container.appendChild(checkbox);
+  });
+}
+
 // Position nodes based on time - all nodes evenly distributed vertically
 function createLayout(timeScale, height, margin, totalNodes) {
   return function(graph) {
@@ -170,8 +203,136 @@ function createTimeScale(d3, graph, width, margin) {
     .range([0, width - margin.left - margin.right]);
 }
 
+// Set up filter event handlers
+function setupFilterHandlers(graph, nodes, d3) {
+  const applyButton = document.getElementById('apply-filters');
+  const clearButton = document.getElementById('clear-filters');
+  
+  if (!applyButton || !clearButton) return;
+  
+  applyButton.addEventListener('click', () => {
+    const selectedSkills = getSelectedSkills();
+    applySkillsFilter(selectedSkills, graph, nodes, d3);
+  });
+  
+  clearButton.addEventListener('click', () => {
+    clearSkillsFilter(graph, nodes, d3);
+  });
+}
+
+// Get selected skills from checkboxes
+function getSelectedSkills() {
+  const checkboxes = document.querySelectorAll('#skills-filter-container input[type="checkbox"]:checked');
+  return Array.from(checkboxes).map(checkbox => checkbox.value);
+}
+
+// Apply filter based on selected skills
+function applySkillsFilter(selectedSkills, graph, nodes, d3) {
+  if (selectedSkills.length === 0) {
+    // If no skills selected, reset all nodes
+    clearSkillsFilter(graph, nodes, d3);
+    return;
+  }
+  
+  // First, dim all nodes
+  nodes
+    .transition()
+    .duration(200)
+    .attr("opacity", 0.2)
+    .attr("stroke-width", 0.5);
+  
+  // Highlight nodes that match at least one of the selected skills
+  const matchingNodes = nodes.filter(d => {
+    if (!d.skills || !Array.isArray(d.skills)) return false;
+    return d.skills.some(skill => selectedSkills.includes(skill));
+  });
+  
+  matchingNodes
+    .transition()
+    .duration(200)
+    .attr("opacity", 1)
+    .attr("stroke-width", 2);
+  
+  // Also highlight labels of matching nodes
+  d3.selectAll("text.node-label")
+    .transition()
+    .duration(200)
+    .attr("opacity", function(d) {
+      if (!d.skills || !Array.isArray(d.skills)) return 0.2;
+      return d.skills.some(skill => selectedSkills.includes(skill)) ? 1 : 0.2;
+    })
+    .attr("font-weight", function(d) {
+      if (!d.skills || !Array.isArray(d.skills)) return "normal";
+      return d.skills.some(skill => selectedSkills.includes(skill)) ? "bold" : "normal";
+    });
+  
+  // And connector lines
+  d3.selectAll("line.node-label-connector")
+    .transition()
+    .duration(200)
+    .attr("opacity", function(d) {
+      if (!d.skills || !Array.isArray(d.skills)) return 0.2;
+      return d.skills.some(skill => selectedSkills.includes(skill)) ? 1 : 0.2;
+    })
+    .attr("stroke-width", function(d) {
+      if (!d.skills || !Array.isArray(d.skills)) return 0.5;
+      return d.skills.some(skill => selectedSkills.includes(skill)) ? 1 : 0.5;
+    });
+    
+  // Reset info panel if it's showing a non-matching node
+  const infoPanel = document.getElementById('info-panel');
+  if (infoPanel.style.display === 'block') {
+    const nodeName = document.getElementById('node-name').textContent;
+    const nodeId = document.getElementById('node-id').textContent;
+    const node = graph.nodes.find(n => n.id === nodeId);
+    
+    if (node && (!node.skills || !node.skills.some(skill => selectedSkills.includes(skill)))) {
+      infoPanel.style.display = 'none';
+    }
+  }
+}
+
+// Clear all filtering, reset to original state
+function clearSkillsFilter(graph, nodes, d3) {
+  // Uncheck all checkboxes
+  document.querySelectorAll('#skills-filter-container input[type="checkbox"]')
+    .forEach(checkbox => checkbox.checked = false);
+  
+  // Reset all nodes
+  nodes
+    .transition()
+    .duration(200)
+    .attr("opacity", 0.9)
+    .attr("stroke-width", 1);
+  
+  // Reset all labels
+  d3.selectAll("text.node-label")
+    .transition()
+    .duration(200)
+    .attr("opacity", 1)
+    .attr("font-weight", "normal");
+  
+  // Reset all connector lines
+  d3.selectAll("line.node-label-connector")
+    .transition()
+    .duration(200)
+    .attr("opacity", 1)
+    .attr("stroke-width", 0.5);
+  
+  // Reset all gradients
+  d3.selectAll("linearGradient.node-gradient")
+    .selectAll("stop")
+    .transition()
+    .duration(200)
+    .attr("offset", function(d, i) {
+      return i === 0 ? "0%" : "100%";
+    });
+}
+
 // Create the SVG visualization
 function createVisualization(d3, width, height, graph, margin, timeScale, duration) {
+  // Store d3 instance for filter functions
+  window.d3 = d3;
   const arrow = "→"; // Unicode arrow for link tooltips
   let selectedNode = null; // Track the currently selected node
   const dateFormat = d3.timeFormat("%b %d, %Y"); // Format for displaying dates
@@ -905,6 +1066,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Load data
     const projectData = await loadProjectData();
+
+    // Extract unique skills and populate filter
+    const uniqueSkills = extractUniqueSkills(projectData.projects);
+    populateSkillsFilter(uniqueSkills);
     
     // Process data
     const graph = processData(projectData, d3);
@@ -927,6 +1092,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Add to the page
     document.getElementById('visualization').appendChild(svg);
+    
+    // Setup filter handlers AFTER visualization is created
+    setupFilterHandlers(layoutedGraph, d3.selectAll("rect.node"), d3);
     
   } catch (error) {
     console.error('Error initializing visualization:', error);
