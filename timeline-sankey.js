@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Constants
     const width = window.innerWidth - 20;
     // Adjust height based on viewport size 
-    const height = Math.max(600, window.innerHeight - 250); // Reduced from 650
+    const height = Math.max(600, window.innerHeight - 250);
     const margin = {
       top: 30,
       right: 400, // Increased right margin to make room for the info panel
@@ -48,7 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     errorElement.textContent = `Failed to initialize visualization: ${error.message}`;
     document.getElementById('visualization').appendChild(errorElement);
   }
-});// Load project data from a local file
+});
+
+// Load project data from a local file
 async function loadProjectData() {
   // Add a timestamp to prevent caching
   const timestamp = new Date().getTime();
@@ -231,8 +233,8 @@ function processData(projectData, d3) {
 function createTimeScale(d3, graph, width, margin) {
   // If no data or no date range, create a default scale
   if (!graph || !graph.minDate || !graph.maxDate || graph.minDate.getTime() === graph.maxDate.getTime()) {
-    const defaultStart = new Date(2023, 0, 1);  // Jan 1, 2023
-    const defaultEnd = new Date(2023, 11, 31);  // Dec 31, 2023
+    const defaultStart = new Date(2023, 5, 1);  // June 1, 2023
+    const defaultEnd = new Date(2025, 11, 31);  // Dec 31, 2025
     return d3.scaleTime()
       .domain([defaultStart, defaultEnd])
       .range([0, width - margin.left - margin.right]);
@@ -349,7 +351,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .classed("view", true)
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
   
-  // Add time axis - positioned closer to the nodes to reduce vertical gap
+  // Add time axis
   const timeAxis = d3.axisBottom(timeScale)
     .ticks(d3.timeMonth.every(1))
     .tickFormat(d3.timeFormat("%b %Y"));
@@ -399,20 +401,6 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     .attr("font-size", 11)
     .attr("font-family", "Arial, sans-serif")
     .text(d => d.name);
-    
-  // Optional: Add light connecting line between label and node
-  view.selectAll("line.node-label-connector")
-    .data(graph.nodes)
-    .join("line")
-    .classed("node-label-connector", true)
-    .attr("id", d => `node-connector-${d.id}`)
-    .attr("x1", d => d.x0 - 3)
-    .attr("y1", d => (d.y0 + d.y1) / 2)
-    .attr("x2", d => d.x0)
-    .attr("y2", d => (d.y0 + d.y1) / 2)
-    .attr("stroke", "#ccc")
-    .attr("stroke-width", 0.5)
-    .attr("stroke-dasharray", "2,2");
   
   // Only create links if there are any connections
   let gradientLinks = null;
@@ -431,7 +419,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       const xDist = targetX - sourceX;
       const controlPointOffset = Math.min(80, xDist * 0.4);
       
-      // Define the Bezier curve path
+      // Define the curve path
       return `M ${sourceX},${sourceY} 
               C ${sourceX + controlPointOffset},${sourceY} 
                 ${targetX - controlPointOffset},${targetY} 
@@ -444,8 +432,8 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       .join("path")
       .classed("link", true)
       .attr("d", createLinkPath)
-      .attr("stroke", "grey")
-      .attr("stroke-opacity", 0.04)
+      .attr("stroke", "lightgrey")
+      .attr("stroke-opacity", 0.1)
       .attr("stroke-width", d => Math.max(1, d.width))
       .attr("fill", "none");
     
@@ -665,7 +653,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
     document.getElementById('node-category').textContent = node.category;
     document.getElementById('node-phase').textContent = `${node.phase || '1'}`;
 
-    // Add this block to display skills as tags
+    // Display skills as tags
     const skillsElement = document.getElementById('node-skills');
     skillsElement.innerHTML = '';
 
@@ -680,7 +668,7 @@ function createVisualization(d3, width, height, graph, margin, timeScale, durati
       skillsElement.textContent = 'None specified';
     }
 
-    // Format description text with better handling for longer content
+    // Format description text for longer content
     const descriptionElement = document.getElementById('node-description');
     descriptionElement.textContent = node.description || 'No description available';
     
