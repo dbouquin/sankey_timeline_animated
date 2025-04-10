@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const height = Math.max(600, window.innerHeight - 250); // Reduced from 650
     const margin = {
       top: 30,
-      right: 350, // Increased right margin to make room for the info panel
+      right: 400, // Increased right margin to make room for the info panel
       bottom: 50, 
       left: 100    // Increased left margin to make room for project labels
     };
