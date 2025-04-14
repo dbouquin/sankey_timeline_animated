@@ -1,6 +1,6 @@
 # Timeline-Based Sankey Diagram
 
-This visualization displays projects on a timeline with Sankey-style flow connections between them. Projects are positioned horizontally based on their start and end dates.
+This visualization displays projects on a timeline with Sankey-style flow connections between them. Projects are positioned horizontally based on their start and end dates. Try it out on [Observable](https://observablehq.com/@dbouquin/interactive-timeline-with-animated-gradients).
 
 ## Key Features
 
